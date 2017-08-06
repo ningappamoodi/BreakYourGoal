@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView android:id="@+id/subgoal_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"/>
+
+    <FrameLayout android:id="@+id/subgoal_frame_1"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#fff"
+        android:elevation="4dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="16dp">
+        <EditText
+            android:id="@+id/subgoal_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="Goal name"
+            android:inputType="text"
+            android:background="#fff"
+            />
+    </FrameLayout>
+    <FrameLayout android:id="@+id/subgoal_frame_2"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#fff"
+        android:elevation="4dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_below="@+id/subgoal_frame_1">
+        <EditText  android:id="@+id/subgoal_date"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="none"
+            android:focusable="false"
+            android:onClick="showDatePickerDialog3"
+            android:hint="From date"
+            android:background="#fff"/>
+    </FrameLayout>
+
+    <Button  android:id="@+id/subgoal_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:focusable="false"
+        android:hint="ADD"
+        android:layout_below="@+id/subgoal_frame_2"
+        android:layout_alignParentRight="true"
+        android:background="@android:color/transparent"
+        android:textColor="@color/colorAccent"
+        android:textColorHighlight="@color/colorAccent"
+        android:textColorLink="@color/colorAccent"
+        android:textStyle="bold"
+        android:onClick="subgoalAdd"
+        />
+
+    <Button  android:id="@+id/subgoal_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:focusable="false"
+        android:hint="CANCEL"
+        android:layout_below="@+id/subgoal_frame_2"
+        android:layout_toLeftOf="@+id/subgoal_add"
+        android:background="@android:color/transparent"
+        android:textColor="@color/colorAccent"
+        android:textColorHighlight="@color/colorAccent"
+        android:textColorLink="@color/colorAccent"
+        android:textStyle="bold"
+        android:onClick="subgoalCancel"
+        />
+
+</RelativeLayout>
