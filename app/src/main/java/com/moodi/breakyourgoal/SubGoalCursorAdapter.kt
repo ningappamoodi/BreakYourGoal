@@ -34,6 +34,9 @@ class SubGoalCursorAdapter(context: Context, cursor: Cursor) : CursorRecyclerVie
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
+
+        Log.i("GOAL", "######### SubGoalCursorAdapter : onCreateViewHolder : ")
+
         val itemView = LayoutInflater.from(parent!!.getContext())
                 .inflate(R.layout.item_list_subgoal, parent, false)
         val vh = ViewHolder(itemView)

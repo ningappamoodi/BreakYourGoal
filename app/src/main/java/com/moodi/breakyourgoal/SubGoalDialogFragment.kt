@@ -2,11 +2,15 @@ package com.moodi.breakyourgoal
 
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v7.app.AlertDialog
+import android.text.TextUtils
+import android.util.Log
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 
 /**
  * Created by ningappamoodi on 3/8/17.
@@ -37,5 +41,29 @@ class SubGoalDialogFragment : DialogFragment() {
         return alertDialog
     }
 
+    fun validate() : Boolean {
+
+        var validate = true
+        if (TextUtils.isEmpty(subgoalName!!.text.toString())) {
+
+            validate = false
+           subgoalName?.setHintTextColor(Color.RED)
+
+
+        }
+        if (TextUtils.isEmpty(subgoalDate!!.text.toString())) {
+
+            validate = false
+            subgoalDate?.setHintTextColor(Color.RED)
+
+
+        }
+
+        if(!validate) {
+            return false
+        }
+
+        return true
+    }
 
 }

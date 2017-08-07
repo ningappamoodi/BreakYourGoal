@@ -2,11 +2,13 @@ package com.moodi.breakyourgoal
 
 import android.app.DatePickerDialog
 import android.app.Dialog
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.database.MatrixCursor
 import android.database.MergeCursor
+import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
@@ -38,18 +40,8 @@ import java.util.*
 class ItemDetailActivity : AppCompatActivity() {
 
     var subGoalDialogFragment: SubGoalDialogFragment? = null
-
-    var adapter: SubGoalCursorAdapter? = null
-
    public var goalId: String? = null
 
-    var subGoalList: RecyclerView? = null
-
-    var extendedCursor: MergeCursor? = null
-    var extras: MatrixCursor? = null
-
-
-    lateinit var recyclerAdapter : SubGoalCursorAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,17 +72,13 @@ class ItemDetailActivity : AppCompatActivity() {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             val arguments = Bundle()
-            arguments.putString(ItemDetailFragment.ARG_ITEM_ID,
-                    intent.getStringExtra(ItemDetailFragment.ARG_ITEM_ID))
+
             val fragment = ItemDetailFragment()
             fragment.arguments = arguments
             supportFragmentManager.beginTransaction()
                     .add(R.id.item_detail_container, fragment)
                     .commit()
         }
-
-        subGoalList = findViewById<RecyclerView>(R.id.item_detail_list)
-        subGoalList?.setLayoutManager( LinearLayoutManager(this))
 
         goalId = intent.getStringExtra("GoalId")
 
@@ -141,25 +129,21 @@ class ItemDetailActivity : AppCompatActivity() {
         Log.i("GOAL", "Inside subgoalAdd!! ")
 
         Log.i("GOAL", "subgoalName: " + subGoalDialogFragment!!.subgoalName?.text.toString())
+        Log.i("GOAL", "subgoalName length: "
+                + subGoalDialogFragment!!.subgoalName?.text.toString().length)
 
-        /*  val values = ContentValues()
+          val values = ContentValues()
           values.put("SubGoalName", subGoalDialogFragment!!.subgoalName?.text.toString())
           values.put("Status", "open")
-          values.put("GoalId", goalId?.text.toString())
+          values.put("GoalId", goalId)
           values.put("TargetDate", subGoalDialogFragment!!.subgoalDate?.text.toString())
 
-          contentResolver.insert(GoalsConstant.SUB_GOAL_CONTENT_URI,values)*/
+          contentResolver.insert(GoalsConstant.SUB_GOAL_CONTENT_URI,values)
 
+        if(!subGoalDialogFragment!!.validate()) {
 
-
-      if (TextUtils.isEmpty(subGoalDialogFragment!!.subgoalName.toString()) ||
-              TextUtils.isEmpty(subGoalDialogFragment!!.subgoalDate.toString())) {
-
-          Log.i("GOAL", "Inside if validate: " + subGoalDialogFragment?.subgoalName.toString())
-
-          Toast.makeText(this, "Form fields can't be empty!", Toast.LENGTH_LONG).show()
-          return
-      }
+            return
+        }
 
         val fragmentItemDetail = supportFragmentManager.findFragmentById(R.id.item_detail_container)
         as ItemDetailFragment
