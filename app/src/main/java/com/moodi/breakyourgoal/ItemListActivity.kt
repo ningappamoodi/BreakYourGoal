@@ -83,10 +83,6 @@ class ItemListActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curs
         val recyclerView = findViewById<View>(R.id.item_list)!!
         setupRecyclerView(recyclerView as RecyclerView)
 
-        recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
-
-
-       // recyclerView.listner
         if (findViewById<View>(R.id.item_detail_container) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-w900dp).
@@ -118,9 +114,11 @@ class ItemListActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curs
               Log.i("GOAL", "Inside addOnItemTouchListener")
 
                val goalId = view.findViewById<TextView>(R.id.list_item_goalId)
+               val goalName = view.findViewById<TextView>(R.id.list_item_goal_name)
 
                val intent =  Intent(baseContext, ItemDetailActivity::class.java)
                intent.putExtra("GoalId", goalId.text.toString())
+               intent.putExtra("goalName", goalName.text.toString())
                startActivity(intent)
            }
 

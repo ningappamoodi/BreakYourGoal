@@ -1,12 +1,17 @@
 package com.moodi.breakyourgoal
 
+import android.app.ActionBar
+import android.content.DialogInterface
+import android.content.res.Resources
 import android.database.Cursor
 import android.database.MatrixCursor
 import android.database.MergeCursor
+import android.graphics.Color
 import android.net.Uri
 
 import android.support.design.widget.CollapsingToolbarLayout
 import android.os.Bundle
+import android.preference.MultiSelectListPreference
 import android.support.v4.app.Fragment
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.Loader
@@ -16,9 +21,16 @@ import android.view.ViewGroup
 import android.widget.TextView
 
 import android.support.v4.content.CursorLoader
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
+import android.util.TypedValue
+import android.widget.RelativeLayout
+
+
+
+
 
 
 /**
@@ -58,8 +70,31 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
             val appBarLayout = activity.findViewById<View>(R.id.toolbar_layout) as CollapsingToolbarLayout
             if (appBarLayout != null) {
                // appBarLayout.title = mItem!!.get("list_item_goal_date")
-                appBarLayout.title = "GOALS TITLE"
+                appBarLayout.title = activity.intent.getStringExtra("goalName")
+               // appBarLayout.setExpandedTitleColor(resources.getColor(R.color.colorAccent, null))
+               /* val titleId = Resources.getSystem()
+                        .getIdentifier("action_bar_title", "id", "android")
+
+               val ab = activity.actionBar
+                val tv = TextView(context)
+
+                val lp = RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.MATCH_PARENT, // Width of TextView
+                        RelativeLayout.LayoutParams.WRAP_CONTENT)
+                tv.layoutParams = lp
+                tv.setTextColor(Color.RED)
+                tv.text = " Android Export DEv17"
+                tv.setTextSize(50, 50.0f)*/
+               // appBarLayout.
+
+             /*   if (titleId > 0) {
+                    val title = activity.findViewById<TextView>("action_bar_title") as TextView
+                    title.setSingleLine(false)
+                    title.maxLines = 2
+                    title.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16f)
+                }*/
             }
+
 
     }
 
@@ -94,19 +129,14 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
             subGoalList = rootView.findViewById<RecyclerView>(R.id.item_detail_list)
             subGoalList?.setLayoutManager( LinearLayoutManager(context))
 
-            val extras = MatrixCursor(arrayOf("_id", "SubGoalName", "GoalId", "Status", "TargetDate"))
-
-            extras?.addRow(arrayOf("-1", "sub goal name",
-                    goalId, "open", "15-Aug-17"))
-
-            subGoalList?.adapter = SubGoalCursorAdapter(context, MergeCursor(arrayOf(extras)))
-
-
         return rootView
     }
 
     override fun onLoaderReset(loader: Loader<Cursor>?) {
 
+        Log.i("GOAL", "################ onLoaderReset")
+         val cursorLoader = loader as CursorLoader
+        recyclerAdapter.swapCursor(cursorLoader.loadInBackground())
 
     }
 
@@ -149,7 +179,7 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
             projection = arrayOf("_id", "SubGoalName", "GoalId", "Status", "TargetDate")
             cursorLoader = CursorLoader(context, GoalsConstant.SUB_GOAL_CONTENT_URI,
-                    projection, null, null, null)
+                    projection, "GoalId=?", arrayOf(goalId), null)
 
         }
 
@@ -165,6 +195,7 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
         Log.i("GOAL", "################# cursor count: " + cursor?.count)
         recyclerAdapter = SubGoalCursorAdapter(context, cursor)
+        //recyclerAdapter.notifyDataSetChanged()
 
         subGoalList?.adapter = recyclerAdapter
 

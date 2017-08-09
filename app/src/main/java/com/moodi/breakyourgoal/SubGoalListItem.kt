@@ -11,8 +11,9 @@ class SubGoalListItem {
 
    public var subGoalName: String? = null
     public var subGoalId: String? = null
-    /*public var goalCategory: String? = null
-    public var goalDuration: String? = null
+   public var targetDate: String? = null
+    public var statusTxt: String? = null
+    /*
     public var goalDate: String? = null
 */
 
@@ -25,9 +26,8 @@ class SubGoalListItem {
 
             listItem.subGoalId = cursor.getString(0)
             listItem.subGoalName = cursor.getString(1)
-            /*listItem.goalCategory = cursor.getString(2)
-            listItem.goalDuration = cursor.getString(3)
-            listItem.goalDate = cursor.getString(4) + " to " + cursor.getString(5)*/
+            listItem.statusTxt = cursor.getString(3)
+            listItem.targetDate = cursor.getString(4)
 
          return listItem
         }

@@ -163,21 +163,7 @@ class AddGoalActivity : AppCompatActivity() {
 
         Log.i("GOAL", "subgoalName: " + subGoalDialogFragment!!.subgoalName?.text.toString())
 
-        /*  val values = ContentValues()
-          values.put("SubGoalName", subGoalDialogFragment!!.subgoalName?.text.toString())
-          values.put("Status", "open")
-          values.put("GoalId", goalId?.text.toString())
-          values.put("TargetDate", subGoalDialogFragment!!.subgoalDate?.text.toString())
-
-          contentResolver.insert(GoalsConstant.SUB_GOAL_CONTENT_URI,values)*/
-
         subGoalDialogFragment!!.dismiss()
-
-
-        val projection = arrayOf("_id", "SubGoalName", "GoalId", "Status", "TargetDate")
-
-      /*  val c = contentResolver.query(GoalsConstant.SUB_GOAL_CONTENT_URI, projection, "_id=?",
-                arrayOf(goalId!!.text.toString()), null)*/
 
         if (extras == null) {
              extras = MatrixCursor(arrayOf("_id", "SubGoalName", "GoalId", "Status", "TargetDate"))
@@ -187,12 +173,6 @@ class AddGoalActivity : AppCompatActivity() {
 
         val cursors = arrayOf<Cursor>(extras!!)
         extendedCursor = MergeCursor(cursors)
-
-
-        val from = arrayOf("_id", "SubGoalName")
-        val to = intArrayOf(R.id.subgoal_id, R.id.subgoal_item_goal_name)
-
-       // val adapter = SimpleCursorAdapter(this, R.layout.item_list_subgoal, extendedCursor, from, to, 0)
 
         Log.i("GOAL", "################# cursor count: " + extendedCursor?.count)
         recyclerAdapter = SubGoalCursorAdapter(this, extendedCursor!!)
@@ -211,7 +191,6 @@ class AddGoalActivity : AppCompatActivity() {
         val newFragment = DatePickerFragment()
         newFragment.show(supportFragmentManager, "datePicker")
 
-        // View view = this.getCurrentFocus();
         if (v != null) {
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(v.windowToken, 0)
@@ -223,7 +202,6 @@ class AddGoalActivity : AppCompatActivity() {
         val newFragment = DatePickerFragment2()
         newFragment.show(supportFragmentManager, "datePicker")
 
-        // View view = this.getCurrentFocus();
         if (v != null) {
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(v.windowToken, 0)
@@ -235,14 +213,11 @@ class AddGoalActivity : AppCompatActivity() {
         val newFragment = DatePickerFragment3()
         newFragment.show(supportFragmentManager, "datePicker")
 
-        // View view = this.getCurrentFocus();
         if (v != null) {
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(v.windowToken, 0)
         }
     }
-
-
 
     class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener {
 
