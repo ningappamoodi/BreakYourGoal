@@ -11,7 +11,7 @@ import android.util.Log
  * Created by ningappamoodi on 26/7/17.
  */
 class GoalDatabaseHelper(context: Context) : SQLiteOpenHelper(context,
-        "Goals.db", null, 2) {
+        "Goals.db", null, 3) {
 
 
     override fun onCreate(db: SQLiteDatabase?) {

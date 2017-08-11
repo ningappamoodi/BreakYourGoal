@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#fff"
@@ -22,56 +23,113 @@
             android:layout_marginTop="4dp"
             android:layout_marginBottom="2dp"
             android:textAppearance="?attr/textAppearanceListItem"
+            android:textStyle="bold"
             android:layout_alignParentLeft="true"
             android:text="Expertise in Android Dev."/>
 
-        <TextView
-            android:id="@+id/list_item_goal_category"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="2dp"
-            android:textAppearance="?attr/textAppearanceListItemSecondary"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/text_margin"
-            android:text="Personal"/>
 
     <TextView
         android:id="@+id/list_item_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/text_margin"
+        android:layout_marginBottom="6dp"
         android:textAppearance="?attr/textAppearanceListItemSecondary"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/list_item_goal_name"
-        android:text="24-Jul-2017 to 15-Aug-2017"/>
+        android:text="24-Jul-17 to 15-Aug-17"/>
 
-        <TextView
-            android:id="@+id/list_item_goal_duration"
+
+
+        <ImageView android:id="@+id/list_item_goal_status_inprogress_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
+            app:srcCompat="@drawable/ic_brightness_1_black_24dp"
+            android:layout_marginLeft="@dimen/text_margin"
+            android:layout_marginRight="2dp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/list_item_date"
+            android:tint="@color/colorOrange"/>
+
+        <TextView android:id="@+id/list_item_goal_status_inprogress_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="20"
+            android:layout_marginTop="3dp"
+            android:layout_marginRight="8dp"
+            android:layout_below="@+id/list_item_date"
+            android:layout_toRightOf="@+id/list_item_goal_status_inprogress_img"/>
+
+        <ImageView android:id="@+id/list_item_goal_status_completed_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_brightness_1_black_24dp"
+            android:layout_below="@+id/list_item_date"
+            android:layout_marginRight="2dp"
+            android:layout_toRightOf="@+id/list_item_goal_status_inprogress_txt"
+            android:tint="@color/colorGreen"/>
+
+        <TextView android:id="@+id/list_item_goal_status_completed_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="7"
+            android:layout_marginTop="3dp"
+            android:layout_marginRight="8dp"
+            android:layout_below="@+id/list_item_date"
+            android:layout_toRightOf="@+id/list_item_goal_status_completed_img"/>
+
+        <ImageView android:id="@+id/list_item_goal_status_open_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_brightness_1_black_24dp"
+            android:layout_marginRight="2dp"
+            android:layout_below="@+id/list_item_date"
+            android:layout_toRightOf="@+id/list_item_goal_status_completed_txt"/>
+
+        <TextView android:id="@+id/list_item_goal_status_open_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10"
+            android:layout_marginTop="3dp"
+            android:layout_marginRight="8dp"
+            android:layout_below="@+id/list_item_date"
+            android:layout_toRightOf="@+id/list_item_goal_status_open_img"/>
+
+
+        <TextView android:id="@+id/list_item_goal_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:layout_marginLeft="10dp"
+            android:textAppearance="?attr/textAppearanceListItemSecondary"
+            android:layout_marginRight="@dimen/text_margin"
+            android:layout_below="@+id/list_item_date"
+            android:layout_toRightOf="@+id/list_item_goal_status_open_txt"
+            android:textColor="@color/colorGrey"
+            android:text="Personal"/>
+
+        <TextView android:id="@+id/list_item_goal_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:layout_marginBottom="6dp"
             android:textAppearance="?attr/textAppearanceListItemSecondary"
-            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/list_item_goal_category"
             android:layout_marginRight="@dimen/text_margin"
-            android:layout_below="@+id/list_item_goal_category"
-            android:text="Days"/>
+            android:layout_below="@+id/list_item_date"
+            android:textColor="@color/colorGrey"
+            android:text="Days"
+            android:visibility="invisible"/>
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="@android:style/Widget.Holo.Light.ProgressBar.Horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:progress="50"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="20dp"
-        android:layout_weight="1"
-        android:layout_below="@+id/list_item_date"
-        android:max="100"
-        android:indeterminate="false"/>
+        <TextView android:id="@+id/list_item_goal_percentage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="50%"
+            android:layout_marginRight="8dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:textStyle="bold"
+            android:textSize="@dimen/goal_item_percentage_text"/>
 
     </RelativeLayout>
 </FrameLayout>

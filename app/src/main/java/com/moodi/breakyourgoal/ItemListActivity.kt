@@ -40,21 +40,7 @@ class ItemListActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curs
 
     lateinit var recyclerAdapter : MyListCursorAdapter
 
-    override fun onLoadFinished(loader: Loader<Cursor>?, cursor: Cursor?) {
 
-        when (loader?.id) {
-            1 ->
-                // The asynchronous load is complete and the data
-                // is now available for use. Only now can we associate
-                // the queried Cursor with the SimpleCursorAdapter.
-                recyclerAdapter.swapCursor(cursor!!)
-        }
-    }
-
-    override fun onLoaderReset(p0: Loader<Cursor>?) {
- //       recyclerAdapter!!.swapCursor(null!!)
-        Log.i("GOAL", "#### In list activity onLoaderReset")
-    }
 
 
     /**
@@ -91,7 +77,8 @@ class ItemListActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curs
             mTwoPane = true
         }
 
-        loaderManager.initLoader(0, null, this)
+        loaderManager.initLoader(GoalsConstant.SUBGOAL, null, this)
+        loaderManager.initLoader(GoalsConstant.GOAL, null, this)
     }
 
     private fun setupRecyclerView(recyclerView: RecyclerView) {
@@ -128,14 +115,55 @@ class ItemListActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curs
 
     override fun onCreateLoader(p0: Int, p1: Bundle?): Loader<Cursor> {
 
-        val projection = arrayOf("_id", "GoalName", "Category", "Duration", "FromDate", "ToDate")
-        val selection = null
-        val selectionArgs = null
-        val sortOrder = null
-        Log.i("GOAL", "################## Item list activity : On create loader method : ")
+        var loader: Loader<Cursor>? = null
 
-        return CursorLoader(this, GoalsConstant.GOAL_LIST_CONTENT_URI,
-        projection, selection, null,"")
+        when(p0) {
+            GoalsConstant.GOAL -> {
+
+                val projection = arrayOf("_id", "GoalName", "Category", "Duration", "FromDate", "ToDate")
+
+
+                Log.i("GOAL", "################## Item list activity : On create loader method : ")
+
+                loader = CursorLoader(this, GoalsConstant.GOAL_LIST_CONTENT_URI,
+                        projection, null, null,null)
+            }
+
+            GoalsConstant.SUBGOAL -> {
+
+                val projection = arrayOf("GoalId", "Status")
+
+                loader = CursorLoader(this, GoalsConstant.SUB_GOAL_CONTENT_URI,
+                        projection, null, null,null)
+            }
+        }
+
+        return loader!!
+
+    }
+
+    override fun onLoadFinished(loader: Loader<Cursor>?, cursor: Cursor?) {
+
+        when (loader?.id) {
+            GoalsConstant.GOAL ->
+                // The asynchronous load is complete and the data
+                // is now available for use. Only now can we associate
+                // the queried Cursor with the SimpleCursorAdapter.
+                recyclerAdapter.swapCursor(cursor!!)
+
+            GoalsConstant.SUBGOAL -> {
+
+                Log.i("GOAL", "############# onLoadFinished : SUBGOAL: cursor?.count: "
+                        + cursor?.count)
+                recyclerAdapter.statusMap = MyListItem.fromCursorForStatus(cursor!!)
+                recyclerAdapter.swapCursor(recyclerAdapter.cursor!!)
+            }
+        }
+    }
+
+    override fun onLoaderReset(p0: Loader<Cursor>?) {
+        //       recyclerAdapter!!.swapCursor(null!!)
+        Log.i("GOAL", "#### In list activity onLoaderReset")
     }
 
 }

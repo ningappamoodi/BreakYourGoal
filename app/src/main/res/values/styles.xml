@@ -3,11 +3,12 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/colorPurple</item>
+        <item name="colorPrimaryDark">@color/colorPurpleDark</item>
+        <item name="colorAccent">@color/colorPurple</item>
         <item name="toolbarStyle">@style/AppTheme.ToolbarStyle</item>
-        <item name="colorControlHighlight">@color/colorPrimary</item>
+        <item name="colorControlHighlight">@color/colorPurple</item>
+        <item name="android:buttonStyle">@style/myButton</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="actionButtonStyle">@style/myActionButtonStyle</item>
@@ -26,6 +27,8 @@
 
     <style name="TextAppearance.AppCompat.Button.Custom">
         <item name="android:textColor">@android:color/white</item>
+        <item name="android:colorBackground">@color/colorPurpleDark</item>
+
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -33,8 +36,14 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="myButton" parent="Widget.AppCompat.Button">
+            <item name="android:background">@drawable/button_shape</item>
+        <item name="background">@drawable/button_shape</item>
+
+    </style>
+
     <style name="AppTheme.ToolbarStyle" parent="Base.Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:background">@color/colorPurpleDark</item>
         <item name="titleTextColor">@android:color/white</item>
         <item name="titleTextAppearance">@style/TextAppearance.AppCompat.Widget.ActionBar.Title</item>
 

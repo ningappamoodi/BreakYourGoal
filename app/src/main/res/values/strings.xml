@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Break Your Goal</string>
+    <string name="app_name">Goal Tracker</string>
     <string name="action_settings">Settings</string>
 
     <string-array name="array_add_goal_category">
@@ -23,7 +23,7 @@
 
     <string-array name="array_sub_goal_status">
         <item>Open</item>
-        <item>Postpone</item>
+        <item>Postponed</item>
         <item>In Progress</item>
         <item>Completed</item>
 

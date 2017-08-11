@@ -27,10 +27,8 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.util.TypedValue
 import android.widget.RelativeLayout
-
-
-
-
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 
 
 /**
@@ -51,7 +49,8 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
     var itemDetailDuration: TextView? = null
     var itemDetailCategory: TextView? = null
-    var itemDetailGoalDate: TextView? = null
+    var itemDetailGoalFromDate: TextView? = null
+    var itemDetailGoalToDate: TextView? = null
 
     var subGoalCount: TextView? = null;
 
@@ -72,27 +71,6 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
                // appBarLayout.title = mItem!!.get("list_item_goal_date")
                 appBarLayout.title = activity.intent.getStringExtra("goalName")
                // appBarLayout.setExpandedTitleColor(resources.getColor(R.color.colorAccent, null))
-               /* val titleId = Resources.getSystem()
-                        .getIdentifier("action_bar_title", "id", "android")
-
-               val ab = activity.actionBar
-                val tv = TextView(context)
-
-                val lp = RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.MATCH_PARENT, // Width of TextView
-                        RelativeLayout.LayoutParams.WRAP_CONTENT)
-                tv.layoutParams = lp
-                tv.setTextColor(Color.RED)
-                tv.text = " Android Export DEv17"
-                tv.setTextSize(50, 50.0f)*/
-               // appBarLayout.
-
-             /*   if (titleId > 0) {
-                    val title = activity.findViewById<TextView>("action_bar_title") as TextView
-                    title.setSingleLine(false)
-                    title.maxLines = 2
-                    title.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16f)
-                }*/
             }
 
 
@@ -122,7 +100,8 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
         Log.i("GOAL", "################## In onCreateView")
 
         subGoalCount =       rootView.findViewById(R.id.item_detail_subgoal_count)
-        itemDetailGoalDate = rootView.findViewById(R.id.item_detail_goal_date)
+        itemDetailGoalFromDate = rootView.findViewById(R.id.item_detail_goal_from_date)
+        itemDetailGoalToDate = rootView.findViewById(R.id.item_detail_goal_to_date)
         itemDetailCategory = rootView.findViewById(R.id.item_detail_category)
         itemDetailDuration = rootView.findViewById(R.id.item_detail_duration)
 
@@ -146,7 +125,16 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
             GoalsConstant.GOAL -> {
 
                 data?.moveToFirst()
-                itemDetailGoalDate?.text = data?.getString(4) + " to " + data?.getString(5)
+
+                val df: DateFormat = SimpleDateFormat("dd/MM/yyyy")
+                val df1: DateFormat = SimpleDateFormat("dd-MMM-yy")
+
+                val date = df.parse(data?.getString(4))
+                val date1 = df.parse(data?.getString(5))
+
+                itemDetailGoalFromDate?.text = df1.format(date)
+                itemDetailGoalToDate?.text =   df1.format(date1)
+
                 itemDetailCategory?.text = data?.getString(2)
                 itemDetailDuration?.text = data?.getString(3)
             }
@@ -195,7 +183,7 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
         Log.i("GOAL", "################# cursor count: " + cursor?.count)
         recyclerAdapter = SubGoalCursorAdapter(context, cursor)
-        //recyclerAdapter.notifyDataSetChanged()
+        recyclerAdapter.goalId = goalId
 
         subGoalList?.adapter = recyclerAdapter
 

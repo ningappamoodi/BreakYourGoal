@@ -5,6 +5,8 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.DialogInterface
 import android.database.Cursor
+import android.database.MatrixCursor
+import android.database.MergeCursor
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -16,6 +18,8 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.content_add_goal.*
 import android.support.design.widget.CoordinatorLayout.Behavior.setTag
 import android.support.v4.content.ContextCompat
+import android.support.v4.text.TextUtilsCompat
+import android.text.TextUtils
 
 
 /**
@@ -29,6 +33,9 @@ class SubGoalCursorAdapter: CursorRecyclerViewAdapter<SubGoalCursorAdapter.ViewH
 
     var mRecyclerView: RecyclerView?  = null
 
+    var goalId: String? = null
+    var extras: MatrixCursor? = null
+
     constructor(context: Context, cursor: Cursor) : super(context, cursor)  {
 
 
@@ -37,13 +44,14 @@ class SubGoalCursorAdapter: CursorRecyclerViewAdapter<SubGoalCursorAdapter.ViewH
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+
         var subGoalName: TextView
         var subGoalId: TextView
+        var targetDate: TextView
+        var statusTxt: TextView
+
         var editSubGoal: ImageView
         var deleteSubGoal: ImageView
-        var targetDate: TextView
-
-        var statusTxt: TextView
         var statusImg: ImageView
 
         init {
@@ -84,9 +92,9 @@ class SubGoalCursorAdapter: CursorRecyclerViewAdapter<SubGoalCursorAdapter.ViewH
        var color: Int? = null
        when(myListItem.statusTxt) {
 
-           "Postpone" ->  color = ContextCompat.getColor(context, R.color.colorRed)
-           "In Progress" -> color = ContextCompat.getColor(context, R.color.colorOrange)
-           "Completed" ->   color = ContextCompat.getColor(context, R.color.colorGreen)
+           GoalsConstant.POSTPONED ->  color = ContextCompat.getColor(context, R.color.colorRed)
+           GoalsConstant.IN_PROGRESS -> color = ContextCompat.getColor(context, R.color.colorOrange)
+           GoalsConstant.COMPLETED ->   color = ContextCompat.getColor(context, R.color.colorGreen)
        }
 
        if(color != null) {
@@ -135,19 +143,50 @@ class SubGoalCursorAdapter: CursorRecyclerViewAdapter<SubGoalCursorAdapter.ViewH
                            var color: Int? = null
                            when(statusArray.get(selected)) {
 
-                               "Postpone" ->  color = ContextCompat.getColor(context, R.color.colorRed)
-                               "In Progress" -> color = ContextCompat.getColor(context, R.color.colorOrange)
-                               "Completed" ->   color = ContextCompat.getColor(context, R.color.colorGreen)
+                               GoalsConstant.OPEN ->        color = ContextCompat.getColor(context,  R.color.colorGrey)
+                               GoalsConstant.POSTPONED ->   color = ContextCompat.getColor(context,  R.color.colorRed)
+                               GoalsConstant.IN_PROGRESS -> color = ContextCompat.getColor(context,  R.color.colorOrange)
+                               GoalsConstant.COMPLETED ->   color = ContextCompat.getColor(context,  R.color.colorGreen)
                            }
 
                            if(color != null) {
                                viewHolder.statusImg.setColorFilter(color!!)
                            }
 
+                           Log.i("GOAL", "########################## subgoal id : "
+                                   + viewHolder.subGoalId.text.toString())
+
+                           if(viewHolder.subGoalId.text.toString().toInt() < 0) {
+
+                               val extras2 = MatrixCursor(arrayOf("_id", "SubGoalName", "GoalId", "Status", "TargetDate"))
+
+                               if(extras != null) {
+
+                                   extras!!.moveToFirst()
+                                   while (!extras!!.isAfterLast) {
+
+
+                                       if (!(TextUtils.equals(myListItem.subGoalId.toString(), extras!!.getString(0)))) {
+                                           extras2.addRow(arrayOf(extras!!.getString(0), extras!!.getString(1),
+                                                   extras!!.getString(2), extras!!.getString(3),
+                                                   extras!!.getString(4)))
+                                       } else {
+
+                                           Log.i("GOAL", "############## myListItem.statusTxt.toString: " +
+                                                   myListItem.statusTxt.toString())
+                                           extras2.addRow(arrayOf(extras!!.getString(0), extras!!.getString(1),
+                                                   extras!!.getString(2), statusArray.get(selected),
+                                                   extras!!.getString(4)))
+                                       }
+
+                                       extras!!.moveToNext()
+                                   }
+
+                                   extras = extras2
+                               }
+                           }
+
                        }
-
-
-
                    }
 
                }).setNegativeButton("CANCEL", object : DialogInterface.OnClickListener {
@@ -167,6 +206,8 @@ class SubGoalCursorAdapter: CursorRecyclerViewAdapter<SubGoalCursorAdapter.ViewH
                Log.i("GOAL", "##################### deleteSubGoal onClick listner")
 
                Log.i("GOAL", "################## subGoalId value: " + myListItem.subGoalId.toString())
+
+
                context!!.contentResolver.delete(GoalsConstant.SUB_GOAL_CONTENT_URI,"_id=?",
                        arrayOf(myListItem.subGoalId.toString()))
 
@@ -178,11 +219,52 @@ class SubGoalCursorAdapter: CursorRecyclerViewAdapter<SubGoalCursorAdapter.ViewH
                        Log.i("GOAL", "############ verticalScrollbarPosition : "
                                + view!!.verticalScrollbarPosition)
 
-                       val projection = arrayOf("_id", "SubGoalName", "GoalId", "Status", "TargetDate")
-                       val c = context!!.contentResolver.query(GoalsConstant.SUB_GOAL_CONTENT_URI, projection,
-                               null, null, null)
+                       var c: Cursor? = null
+                       if(goalId != null) {
+                           val projection = arrayOf("_id", "SubGoalName", "GoalId", "Status", "TargetDate")
+                           c = context!!.contentResolver.query(GoalsConstant.SUB_GOAL_CONTENT_URI, projection,
+                                   "GoalId=?", arrayOf(goalId), null)
+                       }
 
-                       swapCursor(c)
+                       val extras2 = MatrixCursor(arrayOf("_id", "SubGoalName", "GoalId", "Status", "TargetDate"))
+                     //  var isDataChanged: Boolean = false
+                       if(extras != null) {
+
+                           extras!!.moveToFirst()
+                           while (!extras!!.isAfterLast) {
+
+                               Log.i("GOAL", "########### subGoalId: " + myListItem.subGoalId.toString())
+                               Log.i("GOAL", "########### _id: " + extras!!.getString(0))
+                               if (!(TextUtils.equals(myListItem.subGoalId.toString(), extras!!.getString(0)))) {
+                                   extras2.addRow(arrayOf(extras!!.getString(0), extras!!.getString(1),
+                                           extras!!.getString(2), extras!!.getString(3),
+                                           extras!!.getString(4)))
+                                  // isDataChanged = true
+                               }
+
+                               extras!!.moveToNext()
+                           }
+
+                           extras = extras2
+                       }
+
+
+
+                       var cursors: Array<Cursor>? = null
+                       if(extras2 != null) {
+
+                           if(c != null) {
+                                cursors = arrayOf<Cursor>(extras2!!, c)
+                           } else {
+                                cursors = arrayOf<Cursor>(extras2!!)
+                           }
+                               val extendedCursor = MergeCursor(cursors)
+                               swapCursor(extendedCursor)
+
+                       } else {
+                           swapCursor(c!!)
+                       }
+
                        notifyItemRemoved(position)
                    }
                })

@@ -7,4 +7,6 @@
     <color name="colorGrey">#8c8c8c</color>
     <color name="colorOrange">#FF8000</color>
     <color name="colorGreen">#33cc33</color>
+    <color name="colorPurple">#BA68C8</color>
+    <color name="colorPurpleDark">#9C27B0</color>
 </resources>

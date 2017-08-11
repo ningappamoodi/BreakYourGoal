@@ -15,6 +15,11 @@ class  GoalsConstant {
 
        val GOAL_LIST_CONTENT_URI = Uri.parse("content://com.moodi.breakyourgoal.provider/GoalList") as Uri
         val SUB_GOAL_CONTENT_URI = Uri.parse("content://com.moodi.breakyourgoal.provider/SubGoal") as Uri
+
+        final val IN_PROGRESS = "In Progress"
+        final val COMPLETED = "Completed"
+        final val OPEN = "Open"
+        final val POSTPONED = "Postponed"
     }
 
 }

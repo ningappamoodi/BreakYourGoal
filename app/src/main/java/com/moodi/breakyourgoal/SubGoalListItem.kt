@@ -9,13 +9,10 @@ import android.util.Log
 
 class SubGoalListItem {
 
-   public var subGoalName: String? = null
-    public var subGoalId: String? = null
-   public var targetDate: String? = null
-    public var statusTxt: String? = null
-    /*
-    public var goalDate: String? = null
-*/
+    public  var  subGoalName: String? = null
+    public  var  subGoalId: String? = null
+    public  var  targetDate: String? = null
+    public  var  statusTxt: String? = null
 
     companion object {
 

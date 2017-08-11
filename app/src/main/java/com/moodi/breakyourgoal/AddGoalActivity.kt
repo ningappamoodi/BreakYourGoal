@@ -26,20 +26,24 @@ import java.text.SimpleDateFormat
 import java.util.*
 import android.database.MergeCursor
 import android.database.MatrixCursor
+import android.support.v4.app.LoaderManager
+import android.support.v4.content.CursorLoader
+import android.support.v4.content.Loader
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 
 
 class AddGoalActivity : AppCompatActivity() {
 
+
     var goalId: TextView? = null
     var subGoalList: RecyclerView? = null
     var subGoalDialogFragment: SubGoalDialogFragment? = null
 
     var extendedCursor: MergeCursor? = null
-    var extras: MatrixCursor? = null
+    //var extras: MatrixCursor? = null
 
-    lateinit var recyclerAdapter : SubGoalCursorAdapter
+    var recyclerAdapter : SubGoalCursorAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,9 +105,14 @@ class AddGoalActivity : AppCompatActivity() {
 
       //  val adapter = SimpleCursorAdapter(this, R.layout.item_list_subgoal, c, from, to, 0)
 
-        recyclerAdapter = SubGoalCursorAdapter(this, c)
+        if(recyclerAdapter == null) {
 
-        subGoalList!!.adapter = recyclerAdapter
+            Log.i("GOAL", "############ recyclerAdapter is null!! ")
+        } else {
+            Log.i("GOAL", "############ recyclerAdapter is not null!! ")
+        }
+
+       // extras = recyclerAdapter?.extras
 
         val values = ContentValues()
         values.put("GoalName", add_goal_goal_name.text.toString())
@@ -117,26 +126,26 @@ class AddGoalActivity : AppCompatActivity() {
         Log.i("GOAL", "############## uri.lastPathSegment : " + uri.lastPathSegment)
 
 
-        extras!!.moveToFirst()
+        if(recyclerAdapter?.extras != null) {
+            recyclerAdapter?.extras!!.moveToFirst()
 
-        while (!extras!!.isAfterLast) {
+            while (!recyclerAdapter?.extras!!.isAfterLast) {
 
-           Log.i("GOAL", "##################### cursor index : "
-                   +  extras!!.getString(0))
+                Log.i("GOAL", "##################### cursor index : "
+                        + recyclerAdapter?.extras!!.getString(0))
 
-            extras!!.getString(1)
+                val values = ContentValues()
 
-            val values = ContentValues()
+                values.put("SubGoalName", recyclerAdapter?.extras!!.getString(1))
+                values.put("GoalId",      uri.lastPathSegment)
+                values.put("Status",      recyclerAdapter?.extras!!.getString(3))
+                values.put("TargetDate",  recyclerAdapter?.extras!!.getString(4))
 
-            values.put("SubGoalName", extras!!.getString(1))
-            values.put("GoalId", uri.lastPathSegment)
-            values.put("Status", extras!!.getString(3))
-            values.put("TargetDate", extras!!.getString(4))
-
-            contentResolver.insert(GoalsConstant.SUB_GOAL_CONTENT_URI, values)
+                contentResolver.insert(GoalsConstant.SUB_GOAL_CONTENT_URI, values)
 
 
-            extras!!.moveToNext()
+                recyclerAdapter?.extras!!.moveToNext()
+            }
         }
 
         val intent = Intent(baseContext, ItemListActivity::class.java)
@@ -147,44 +156,67 @@ class AddGoalActivity : AppCompatActivity() {
     fun addSubGoal(view: View) {
 
         subGoalDialogFragment = SubGoalDialogFragment()
-
-
-        // findViewById(R.id.subgoal_id) as TextView
-
-        // subGoalDialogFragment.subgoalId = (as TextView).text.toString()
         subGoalDialogFragment!!.show(supportFragmentManager, "subGoalDialogFragment")
 
     }
 
     fun subgoalAdd(view: View) {
 
-
         Log.i("GOAL", "Inside subgoalAdd!! ")
 
         Log.i("GOAL", "subgoalName: " + subGoalDialogFragment!!.subgoalName?.text.toString())
 
-        subGoalDialogFragment!!.dismiss()
 
-        if (extras == null) {
-             extras = MatrixCursor(arrayOf("_id", "SubGoalName", "GoalId", "Status", "TargetDate"))
+
+        if(!subGoalDialogFragment!!.validate()) {
+
+            return
         }
 
-        extras?.addRow(arrayOf("-1", subGoalDialogFragment!!.subgoalName?.text.toString(), goalId!!.text.toString(), "open", subGoalDialogFragment!!.subgoalDate?.text.toString()))
+        var matrixCursor: MatrixCursor? = null
 
-        val cursors = arrayOf<Cursor>(extras!!)
+        if(recyclerAdapter == null || (recyclerAdapter != null && recyclerAdapter?.extras == null)) {
+
+            matrixCursor = MatrixCursor(arrayOf("_id", "SubGoalName", "GoalId", "Status", "TargetDate"))
+
+        }
+        else if((recyclerAdapter != null && recyclerAdapter?.extras != null)) {
+
+            matrixCursor = recyclerAdapter?.extras
+        }
+
+        Log.i("GOAL", "recyclerAdapter : " + matrixCursor)
+
+
+        val count = matrixCursor!!.count + 1
+        matrixCursor.addRow(arrayOf("-" + count.toString(),
+                subGoalDialogFragment!!.subgoalName?.text.toString(), goalId!!.text.toString(),
+                GoalsConstant.OPEN, subGoalDialogFragment!!.subgoalDate?.text.toString()))
+
+        val cursors = arrayOf<Cursor>(matrixCursor)
         extendedCursor = MergeCursor(cursors)
 
-        Log.i("GOAL", "################# cursor count: " + extendedCursor?.count)
-        recyclerAdapter = SubGoalCursorAdapter(this, extendedCursor!!)
-        subGoalList?.adapter = recyclerAdapter
+        Log.i("GOAL", "################# cursor count: " + matrixCursor.count)
+
+        if(recyclerAdapter == null) {
+
+            recyclerAdapter = SubGoalCursorAdapter(this, extendedCursor!!)
+            subGoalList?.adapter = recyclerAdapter
+        } else {
+            recyclerAdapter?.swapCursor(extendedCursor!!)
+        }
+
+       recyclerAdapter?.extras = matrixCursor
 
 
+        subGoalDialogFragment!!.dismiss()
     }
 
     fun subgoalCancel(view: View) {
 
         subGoalDialogFragment!!.dismiss()
     }
+
 
     fun showDatePickerDialog(v: View?) {
 
@@ -254,7 +286,7 @@ class AddGoalActivity : AppCompatActivity() {
             val day = c.get(Calendar.DAY_OF_MONTH)
 
             // Create a new instance of DatePickerDialog and return it
-            return DatePickerDialog(activity, this, year, month, day)
+            return DatePickerDialog(context, this, year, month, day)
         }
 
         override fun onDateSet(datePicker: DatePicker, i: Int, i1: Int, i2: Int) {
@@ -278,7 +310,7 @@ class AddGoalActivity : AppCompatActivity() {
             val day = c.get(Calendar.DAY_OF_MONTH)
 
             // Create a new instance of DatePickerDialog and return it
-            return DatePickerDialog(activity, this, year, month, day)
+            return DatePickerDialog(context, this, year, month, day)
         }
 
         override fun onDateSet(datePicker: DatePicker, i: Int, i1: Int, i2: Int) {
