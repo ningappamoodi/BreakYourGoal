@@ -5,11 +5,13 @@ import android.app.Dialog
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.database.Cursor
 import android.database.MatrixCursor
 import android.database.MergeCursor
 import android.graphics.Color
 import android.os.Bundle
+import android.support.design.widget.CollapsingToolbarLayout
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.v4.app.DialogFragment
@@ -46,6 +48,10 @@ class ItemDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_item_detail)
+
+
+
+
         val toolbar = findViewById<View>(R.id.detail_toolbar) as Toolbar
         setSupportActionBar(toolbar)
 
@@ -80,9 +86,27 @@ class ItemDetailActivity : AppCompatActivity() {
                     .commit()
         }
 
-        goalId = intent.getStringExtra("GoalId")
+        val appBarLayout = findViewById<View>(R.id.toolbar_layout) as CollapsingToolbarLayout
+        if (appBarLayout != null) {
+            // appBarLayout.title = mItem!!.get("list_item_goal_date")
+            appBarLayout.title = "Goal details"
+            // appBarLayout.setExpandedTitleColor(resources.getColor(R.color.colorAccent, null))
+        }
 
-        Log.i("GOAL", "############## onCreate goalId: " + goalId)
+        if ((resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
+                == Configuration.SCREENLAYOUT_SIZE_XLARGE &&
+                resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) ||
+                (resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
+                        == Configuration.SCREENLAYOUT_SIZE_LARGE &&
+                        resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)) {
+
+            val sharedPref = getSharedPreferences("GOALS", MODE_PRIVATE)
+            val editor = sharedPref.edit()
+            editor.putString("ItemDetailFragment", "ItemDetail")
+            editor.commit()
+
+            onBackPressed()
+        }
 
     }
 
@@ -102,90 +126,10 @@ class ItemDetailActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-
-
     public  fun itemAddSubGoal(view: View) {
 
         subGoalDialogFragment = SubGoalDialogFragment()
         subGoalDialogFragment!!.show(supportFragmentManager, "subGoalDialogFragment")
-
-    }
-
-    fun showDatePickerDialog3(v: View?) {
-
-        val newFragment = DatePickerFragment()
-        newFragment.show(supportFragmentManager, "datePicker")
-
-        // View view = this.getCurrentFocus();
-        if (v != null) {
-            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(v.windowToken, 0)
-        }
-    }
-
-    fun subgoalAdd(view: View) {
-
-
-        Log.i("GOAL", "Inside subgoalAdd!! ")
-
-        Log.i("GOAL", "subgoalName: " + subGoalDialogFragment!!.subgoalName?.text.toString())
-        Log.i("GOAL", "subgoalName length: "
-                + subGoalDialogFragment!!.subgoalName?.text.toString().length)
-
-          val values = ContentValues()
-          values.put("SubGoalName", subGoalDialogFragment!!.subgoalName?.text.toString())
-          values.put("Status", "open")
-          values.put("GoalId", goalId)
-          values.put("TargetDate", subGoalDialogFragment!!.subgoalDate?.text.toString())
-
-          contentResolver.insert(GoalsConstant.SUB_GOAL_CONTENT_URI,values)
-
-        if(!subGoalDialogFragment!!.validate()) {
-
-            return
-        }
-
-        val fragmentItemDetail = supportFragmentManager.findFragmentById(R.id.item_detail_container)
-        as ItemDetailFragment
-
-        fragmentItemDetail.loaderManager.restartLoader(GoalsConstant.SUBGOAL, null, fragmentItemDetail)
-        subGoalDialogFragment!!.dismiss()
-
-
-    }
-
-    fun subgoalCancel(view: View) {
-
-        subGoalDialogFragment!!.dismiss()
-    }
-
-    class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener {
-
-
-        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            // Use the current date as the default date in the picker
-            val c = Calendar.getInstance()
-            val year = c.get(Calendar.YEAR)
-            val month = c.get(Calendar.MONTH)
-            val day = c.get(Calendar.DAY_OF_MONTH)
-
-            // Create a new instance of DatePickerDialog and return it
-            return DatePickerDialog(activity, this, year, month, day)
-        }
-
-        override fun onDateSet(datePicker: DatePicker, i: Int, i1: Int, i2: Int) {
-
-            val act = activity as ItemDetailActivity
-            act.dateSet3(datePicker, i, i1, i2)
-
-        }
-
-    }
-
-    public fun dateSet3(datePicker: DatePicker, i: Int, i1: Int, i2: Int) {
-
-        // subgoal_date.setText(i2.toString() + "/" + i1.toString() + "/" + i.toString())
-        subGoalDialogFragment!!.subgoalDate?.setText(i2.toString() + "/" + i1.toString() + "/" + i.toString())
 
     }
 

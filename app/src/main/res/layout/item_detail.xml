@@ -3,8 +3,8 @@
     android:id="@+id/item_detail"
 
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-
+    android:layout_height="match_parent"
+android:background="@color/colorPurple_50"
    >
 
     <RelativeLayout
@@ -18,10 +18,11 @@
 
         <FrameLayout android:id="@+id/item_detail_frame_1"
             android:layout_width="match_parent"
-            android:layout_height="110dp"
+            android:layout_height="150dp"
             android:background="#fff"
             android:elevation="4dp"
             android:visibility="visible"
+            android:layout_margin="8dp"
 
             >
             <include layout="@layout/goal_detail_frame1"/>
@@ -70,7 +71,7 @@
 
         />
 
-        <Button
+        <Button android:id="@+id/item_detail_add_sub_goal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="itemAddSubGoal"
@@ -78,6 +79,7 @@
             android:text="Add subgoal"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:layout_below="@id/item_detail_list"
 
             />

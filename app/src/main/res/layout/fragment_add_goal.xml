@@ -3,9 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:background="#f0f0f0"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    tools:context=".AddGoalActivity">
 
 <RelativeLayout
     android:layout_width="match_parent"
@@ -83,7 +85,6 @@
             android:layout_height="match_parent"
             android:inputType="none"
             android:focusable="false"
-            android:onClick="showDatePickerDialog"
             android:hint="From date"
             android:background="#fff"/>
     </FrameLayout>
@@ -102,8 +103,7 @@
             android:layout_height="match_parent"
             android:inputType="none"
             android:focusable="false"
-            android:onClick="showDatePickerDialog2"
-            android:hint="From date"
+            android:hint="To date"
             android:background="#fff"/>
     </FrameLayout>
     <FrameLayout android:id="@+id/add_goal_frame_6"
@@ -118,10 +118,9 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         >
-        <Button
+        <Button android:id="@+id/add_goal_add_subgoal_btn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:onClick="addSubGoal"
             android:background="@color/colorPurpleDark"
             android:text="Add sub goal"
             />
@@ -147,10 +146,9 @@
         android:layout_centerHorizontal="true"
         >
 
-    <Button
+    <Button android:id="@+id/add_goal_save_subgoal_btn"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:onClick="saveGoal"
         android:background="@color/colorPurpleDark"
         android:text="Save"
         />

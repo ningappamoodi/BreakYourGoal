@@ -5,12 +5,15 @@ import android.content.Context
 import android.content.CursorLoader
 import android.content.Intent
 import android.content.Loader
+import android.content.res.Configuration
 import android.database.Cursor
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.support.design.widget.FloatingActionButton
+import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,10 +24,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.GestureDetector
 import android.text.method.Touch.onTouchEvent
-
-
-
-
+import android.widget.FrameLayout
 
 
 /**
@@ -38,7 +38,7 @@ import android.text.method.Touch.onTouchEvent
 class ItemListActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Cursor> {
 
 
-    lateinit var recyclerAdapter : MyListCursorAdapter
+    public lateinit var recyclerAdapter : MyListCursorAdapter
 
 
 
@@ -57,14 +57,104 @@ class ItemListActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curs
         setSupportActionBar(toolbar)
         toolbar.title = title
 
+
+        val sharedPref = getSharedPreferences("GOALS", MODE_PRIVATE)
+
+
+        Log.i("GOAL", "AddGoalFragment: " +  sharedPref.contains("AddGoalFragment"))
+        Log.i("GOAL", "ItemDetailFragment: " +  sharedPref.contains("ItemDetailFragment"))
+
+        Log.i("GOAL", "AddGoalFragment: " +  sharedPref.getString("AddGoalFragment", null))
+
+       if( sharedPref.contains("AddGoalFragment")) {
+
+           val arguments = Bundle()
+
+           Log.i("GOAL", " In Home Activity fragment: ")
+           // arguments.putString("GoalId", goalId.text.toString())
+           //arguments.putString("goalName", goalName.text.toString())
+
+           val fragment = AddGoalFragment()
+           fragment.arguments = arguments
+           supportFragmentManager.beginTransaction()
+                   .replace(R.id.item_detail_container, fragment)
+                   .commit()
+
+           val editor = sharedPref.edit()
+           editor.remove("AddGoalFragment")
+           editor.commit()
+       }
+        else  if( sharedPref.contains("ItemDetailFragment")) {
+
+           val arguments = Bundle()
+
+           Log.i("GOAL", " In List Activity fragment ItemDetailFragment : ")
+           // arguments.putString("GoalId", goalId.text.toString())
+           //arguments.putString("goalName", goalName.text.toString())
+
+           arguments.putString("GoalId", sharedPref.getString("GoalId", null))
+           val fragment = ItemDetailFragment()
+           fragment.arguments = arguments
+           supportFragmentManager.beginTransaction()
+                   .replace(R.id.item_detail_container, fragment)
+                   .commit()
+
+           val editor = sharedPref.edit()
+           editor.remove("ItemDetailFragment")
+          // editor.remove("GoalId")
+           editor.commit()
+
+       }
+
         val fab = findViewById<View>(R.id.fab) as FloatingActionButton
         fab.setOnClickListener { view ->
             /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()*/
-
+/*
             val intent =  Intent(baseContext, AddGoalActivity::class.java)
-            startActivity(intent)
+            startActivity(intent)*/
+
+            Log.i("GOAL", " In Home Activity fab.setOnClickListener  : ")
+
+            if ((resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
+                    == Configuration.SCREENLAYOUT_SIZE_XLARGE &&
+                    resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) ||
+                    (resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
+                            == Configuration.SCREENLAYOUT_SIZE_LARGE &&
+                            resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)) {
+                // Create the detail fragment and add it to the activity
+                // using a fragment transaction.
+                val arguments = Bundle()
+
+                Log.i("GOAL", " In Home Activity fragment: ")
+                 // arguments.putString("GoalId", goalId.text.toString())
+                //arguments.putString("goalName", goalName.text.toString())
+
+                val fragment = AddGoalFragment()
+                fragment.arguments = arguments
+                supportFragmentManager.beginTransaction()
+                        .replace(R.id.item_detail_container, fragment)
+                        .commit()
+
+                recyclerAdapter.selectedPosition = null
+                recyclerAdapter.notifyDataSetChanged()
+
+            } else {
+
+                Log.i("GOAL", " In Home Activity activity: ")
+                val intent =  Intent(baseContext, AddGoalActivity::class.java)
+                startActivity(intent)
+            }
         }
+
+
+
+      /*  val fragment = supportFragmentManager.findFragmentById(R.id.item_detail_container)
+
+        Log.i("GOAL", "$$$$$$$$$$$$$$$ fragment: " + fragment)
+        if(fragment != null) {
+            supportFragmentManager.beginTransaction().remove(fragment).commit()
+        }*/
 
         val recyclerView = findViewById<View>(R.id.item_list)!!
         setupRecyclerView(recyclerView as RecyclerView)
@@ -93,6 +183,17 @@ class ItemListActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curs
                 selectionArgs, sortOrder)
 
         recyclerAdapter = MyListCursorAdapter(this, c)
+
+        val sharedPref = getSharedPreferences("GOALS", MODE_PRIVATE)
+
+        if(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            recyclerAdapter.newDataPosition = sharedPref.getString("GoalId", null)?.toInt()
+        }
+
+        val editor = sharedPref.edit()
+        editor.remove("GoalId")
+        editor.commit()
+
         recyclerView.adapter = recyclerAdapter
 
 
@@ -100,13 +201,43 @@ class ItemListActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curs
            override fun onItemClick(view: View, position: Int) {
               Log.i("GOAL", "Inside addOnItemTouchListener")
 
+              // view.setBackgroundColor(ContextCompat.getColor(baseContext, R.color.colorGrey))
+               view.isSelected = true
+               recyclerAdapter.selectedPosition = position
+
+               recyclerView.adapter.notifyDataSetChanged()
+
                val goalId = view.findViewById<TextView>(R.id.list_item_goalId)
                val goalName = view.findViewById<TextView>(R.id.list_item_goal_name)
 
-               val intent =  Intent(baseContext, ItemDetailActivity::class.java)
-               intent.putExtra("GoalId", goalId.text.toString())
-               intent.putExtra("goalName", goalName.text.toString())
-               startActivity(intent)
+
+               Log.i("GOAL", "$$$$$$$$$$$$$ GoalId: " + goalId.text.toString())
+
+               if ((resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
+                       == Configuration.SCREENLAYOUT_SIZE_XLARGE &&
+                       resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) ||
+                       (resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
+                               == Configuration.SCREENLAYOUT_SIZE_LARGE &&
+                               resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)) {
+                   // Create the detail fragment and add it to the activity
+                   // using a fragment transaction.
+                   val arguments = Bundle()
+
+                   arguments.putString("GoalId", goalId.text.toString())
+                   arguments.putString("goalName", goalName.text.toString())
+
+                   val fragment = ItemDetailFragment()
+                   fragment.arguments = arguments
+                   supportFragmentManager.beginTransaction()
+                           .replace(R.id.item_detail_container, fragment)
+                           .commit()
+
+               } else {
+                   val intent = Intent(baseContext, ItemDetailActivity::class.java)
+                   intent.putExtra("GoalId", goalId.text.toString())
+                   intent.putExtra("goalName", goalName.text.toString())
+                   startActivity(intent)
+               }
            }
 
        }))
@@ -145,11 +276,18 @@ class ItemListActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curs
     override fun onLoadFinished(loader: Loader<Cursor>?, cursor: Cursor?) {
 
         when (loader?.id) {
-            GoalsConstant.GOAL ->
-                // The asynchronous load is complete and the data
-                // is now available for use. Only now can we associate
-                // the queried Cursor with the SimpleCursorAdapter.
-                recyclerAdapter.swapCursor(cursor!!)
+            GoalsConstant.GOAL -> {
+
+        // The asynchronous load is complete and the data
+        // is now available for use. Only now can we associate
+        // the queried Cursor with the SimpleCursorAdapter.
+                    //recyclerAdapter.newDataPosition = cursor!!.count - 1
+
+                Log.i("GOAL", "%%%%%%%%%%%% ItemListActivity : onLoadFinished: goal data")
+                    recyclerAdapter.swapCursor(cursor!!)
+                    recyclerAdapter.notifyDataSetChanged()
+
+        }
 
             GoalsConstant.SUBGOAL -> {
 
@@ -166,7 +304,38 @@ class ItemListActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curs
         Log.i("GOAL", "#### In list activity onLoaderReset")
     }
 
+
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
+
+
+        Log.i("GOAL", "######$$$$ Inside onConfigurationChanged!! ")
+        Log.i("GOAL", "######$$$$ newConfig?.orientation : " + newConfig?.orientation)
+
+
+      if (newConfig?.orientation == Configuration.ORIENTATION_PORTRAIT) {
+
+          val fragment = supportFragmentManager.findFragmentById(R.id.item_detail_container)
+
+          if(fragment != null) {
+              supportFragmentManager.beginTransaction().remove(fragment).commit()
+          }
+      }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        val fragment = fragmentManager.findFragmentById(R.id.item_detail_container)
+
+        if(fragment != null) {
+            fragmentManager.beginTransaction().remove(fragment).commit()
+        }
+    }
+
 }
+
+
 class RecyclerItemClickListner :
         RecyclerView.OnItemTouchListener  {
 

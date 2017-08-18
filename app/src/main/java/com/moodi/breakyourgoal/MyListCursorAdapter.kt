@@ -5,10 +5,12 @@ import android.content.Context
 import android.database.Cursor
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
+import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.TextView
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -25,6 +27,9 @@ class MyListCursorAdapter : CursorRecyclerViewAdapter<MyListCursorAdapter.ViewHo
 
     var statusMap: Map<String, Int>? = HashMap<String, Int>()
 
+
+    var selectedPosition: Int? = null
+    var newDataPosition: Int? = null
 
     constructor(context: Context, cursor: Cursor) : super(context, cursor)  {
 
@@ -47,6 +52,8 @@ class MyListCursorAdapter : CursorRecyclerViewAdapter<MyListCursorAdapter.ViewHo
 
         var percentage: TextView
 
+        var listItemRow: FrameLayout
+
         init {
 
             goalId = view.findViewById(R.id.list_item_goalId)
@@ -60,6 +67,7 @@ class MyListCursorAdapter : CursorRecyclerViewAdapter<MyListCursorAdapter.ViewHo
             statusOpenTxt = view.findViewById(R.id.list_item_goal_status_open_txt)
 
             percentage = view.findViewById(R.id.list_item_goal_percentage)
+            listItemRow = view.findViewById(R.id.list_item_row)
 
         }
     }
@@ -78,11 +86,38 @@ class MyListCursorAdapter : CursorRecyclerViewAdapter<MyListCursorAdapter.ViewHo
         super.cursor?.moveToPosition(position)
         val myListItem = MyListItem.fromCursor(super.cursor!!)
 
+       Log.i("GOAL", "$$$$$$$$$$$$$$$$$$ newDataPosition: " + newDataPosition)
+       Log.i("GOAL", "$$$$$$$$$$$$$$$$$$ viewHolder.goalId.text.toString() : "
+               + viewHolder.goalId.text.toString())
+
+
+
        viewHolder.goalId.setText(myListItem.goalId)
        viewHolder.goalName.setText(myListItem.goalName)
        viewHolder.goalCategory.setText(myListItem.goalCategory)
        viewHolder.goalDuration.setText(myListItem.goalDuration)
        viewHolder.goalDate.setText(myListItem.goalDate)
+
+       if(position == selectedPosition) {
+
+           ( viewHolder.listItemRow.layoutParams as RecyclerView.LayoutParams)
+                   .setMargins(8, 8, 0, 8)
+
+       }
+
+       else if(!TextUtils.isEmpty(viewHolder.goalId.text.toString()) &&
+               viewHolder.goalId.text.toString().toInt() == newDataPosition) {
+
+           viewHolder.listItemRow.isSelected = true
+           ( viewHolder.listItemRow.layoutParams as RecyclerView.LayoutParams)
+                   .setMargins(8, 8, 0, 8)
+           newDataPosition = null
+       } else {
+           ( viewHolder.listItemRow.layoutParams as RecyclerView.LayoutParams)
+                   .setMargins(8, 8, 8, 8)
+           viewHolder.listItemRow.isSelected = false
+       }
+
 
        var value = statusMap?.get(myListItem.goalId + ":" + GoalsConstant.IN_PROGRESS)
        if(value == null) value = 0

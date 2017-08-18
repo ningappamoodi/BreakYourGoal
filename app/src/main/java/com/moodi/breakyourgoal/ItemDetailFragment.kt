@@ -1,7 +1,9 @@
 package com.moodi.breakyourgoal
 
 import android.app.ActionBar
+import android.content.Context
 import android.content.DialogInterface
+import android.content.res.Configuration
 import android.content.res.Resources
 import android.database.Cursor
 import android.database.MatrixCursor
@@ -18,15 +20,17 @@ import android.support.v4.content.Loader
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 
 import android.support.v4.content.CursorLoader
 import android.support.v7.app.AlertDialog
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.util.TypedValue
-import android.widget.RelativeLayout
+import android.view.inputmethod.InputMethodManager
+import android.widget.*
+import kotlinx.android.synthetic.main.item_detail.*
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 
@@ -43,9 +47,12 @@ import java.text.SimpleDateFormat
  */
 class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
+
     var goalId: String? = null
 
     var subGoalList: RecyclerView? = null
+
+    var idGoalTitle: TextView? = null
 
     var itemDetailDuration: TextView? = null
     var itemDetailCategory: TextView? = null
@@ -56,22 +63,40 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
     lateinit var recyclerAdapter : SubGoalCursorAdapter
 
+    val subGoalDialogFragment  = SubGoalDialogFragment()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
+        Log.i("GOAL", "$$$$$$$$$$$$$$$$$ In ItemDetailFragment onCreate")
 
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
            // mItem = DummyContent.ITEM_MAP[arguments.getString(ARG_ITEM_ID)]
 
-            val activity = this.activity
-            val appBarLayout = activity.findViewById<View>(R.id.toolbar_layout) as CollapsingToolbarLayout
-            if (appBarLayout != null) {
-               // appBarLayout.title = mItem!!.get("list_item_goal_date")
-                appBarLayout.title = activity.intent.getStringExtra("goalName")
-               // appBarLayout.setExpandedTitleColor(resources.getColor(R.color.colorAccent, null))
-            }
+        if ((resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
+                == Configuration.SCREENLAYOUT_SIZE_XLARGE &&
+                resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) ||
+                (resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
+                        == Configuration.SCREENLAYOUT_SIZE_LARGE&&
+                        resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)) {
+
+            goalId = arguments.getString("GoalId")
+            Log.i("GOAL", "############# goalId for landscape: " + goalId)
+
+        }
+        else {
+
+            goalId = activity.intent.getStringExtra("GoalId")
+
+            Log.i("GOAL", "############# goalId: " + goalId)
+
+           // val activity = this.activity
+
+        }
 
 
     }
@@ -84,10 +109,56 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
         cursor.moveToFirst()
 
-        val itemDetail  = activity as ItemDetailActivity
-        goalId = itemDetail.goalId
+        if ((resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
+                == Configuration.SCREENLAYOUT_SIZE_XLARGE &&
+                resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) ||
+                (resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
+                        == Configuration.SCREENLAYOUT_SIZE_LARGE &&
+                        resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)) {
+
+            val fragmentItemDetail = fragmentManager.findFragmentById(R.id.item_detail_container)
+                    as ItemDetailFragment
+            goalId = fragmentItemDetail.goalId
+        } else {
+
+            goalId = activity.intent.getStringExtra("GoalId")
+        }
+
+        Log.i("GOAL", "############# ItemDetailFragment onActivityCreated goalId: "
+                + goalId)
+        Log.i("GOAL", "############# Orientation : " + resources.configuration.orientation)
+        Log.i("GOAL", "############# Orientation? : "
+                + (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT))
+
+        if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+
+            val sharedPref = activity.getSharedPreferences("GOALS", AppCompatActivity.MODE_PRIVATE)
+            val editor = sharedPref.edit()
+            editor.putString("GoalId", goalId)
+            editor.commit()
+            Log.i("GOAL", "############# goalId for landscape from shared prefs : "
+                    + sharedPref.getString("GoalId", null))
+        }
 
         Log.i("GOAL", "########## onActivityCreated goalId: " + goalId)
+
+        val addSubGoalBtn = activity.findViewById<Button>(R.id.item_detail_add_sub_goal)
+        //val subGoalDatePicker = activity.findViewById<EditText>(R.id.subgoal_date)
+
+        if (addSubGoalBtn == null) {
+            Log.i("GOAL", "############### addSubGoalBtn: " + addSubGoalBtn)
+        }
+
+        //val subGoalDialogFragment = SubGoalDialogFragment()
+
+
+        addSubGoalBtn?.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(p0: View?) {
+                subGoalDialogFragment.show(fragmentManager, "subGoalDialogFragment")
+            }
+        })
+
+
 
         loaderManager.initLoader( GoalsConstant.GOAL, null, this)
         loaderManager.initLoader( GoalsConstant.SUBGOAL, null, this)
@@ -99,6 +170,7 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
         Log.i("GOAL", "################## In onCreateView")
 
+        idGoalTitle =  rootView.findViewById(R.id.goal_detail_title)
         subGoalCount =       rootView.findViewById(R.id.item_detail_subgoal_count)
         itemDetailGoalFromDate = rootView.findViewById(R.id.item_detail_goal_from_date)
         itemDetailGoalToDate = rootView.findViewById(R.id.item_detail_goal_to_date)
@@ -111,6 +183,12 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
         return rootView
     }
 
+
+    override fun onDetach() {
+        super.onDetach()
+
+
+    }
     override fun onLoaderReset(loader: Loader<Cursor>?) {
 
         Log.i("GOAL", "################ onLoaderReset")
@@ -132,6 +210,7 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
                 val date = df.parse(data?.getString(4))
                 val date1 = df.parse(data?.getString(5))
 
+                idGoalTitle?.text = data?.getString(1)
                 itemDetailGoalFromDate?.text = df1.format(date)
                 itemDetailGoalToDate?.text =   df1.format(date1)
 
@@ -182,7 +261,12 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
         subGoalCount?.text = cursor.count.toString()
 
         Log.i("GOAL", "################# cursor count: " + cursor?.count)
-        recyclerAdapter = SubGoalCursorAdapter(context, cursor)
+
+
+        if (activity is ItemListActivity) recyclerAdapter = SubGoalCursorAdapter(context, cursor,
+                activity as ItemListActivity)
+        else recyclerAdapter = SubGoalCursorAdapter(context, cursor, null)
+
         recyclerAdapter.goalId = goalId
 
         subGoalList?.adapter = recyclerAdapter
@@ -190,5 +274,6 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
         subGoalList?.setLayoutManager(LinearLayoutManager(context));
 
     }
+
 
 }

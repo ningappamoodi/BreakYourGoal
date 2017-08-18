@@ -4,9 +4,7 @@ package com.moodi.breakyourgoal
 import android.content.ContentValues
 import android.content.Context
 import android.content.DialogInterface
-import android.database.Cursor
-import android.database.MatrixCursor
-import android.database.MergeCursor
+import android.database.*
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -15,7 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import kotlinx.android.synthetic.main.content_add_goal.*
+import kotlinx.android.synthetic.main.fragment_add_goal.*
 import android.support.design.widget.CoordinatorLayout.Behavior.setTag
 import android.support.v4.content.ContextCompat
 import android.support.v4.text.TextUtilsCompat
@@ -36,11 +34,14 @@ class SubGoalCursorAdapter: CursorRecyclerViewAdapter<SubGoalCursorAdapter.ViewH
     var goalId: String? = null
     var extras: MatrixCursor? = null
 
-    constructor(context: Context, cursor: Cursor) : super(context, cursor)  {
+    var activity: ItemListActivity? = null
+
+    constructor(context: Context, cursor: Cursor, activity: ItemListActivity?) : super(context, cursor)  {
 
 
         this.context = context
         this.cursor1 = cursor
+        this.activity = activity
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -108,7 +109,7 @@ class SubGoalCursorAdapter: CursorRecyclerViewAdapter<SubGoalCursorAdapter.ViewH
                Log.i("GOAL", "##################### editSubGoal onClick listner")
 
 
-               val builder =  AlertDialog.Builder(context!!);
+               val builder =  AlertDialog.Builder(context!!)
                // Set the dialog title
                builder.setTitle("Status").setSingleChoiceItems(R.array.array_sub_goal_status,
                        R.layout.select_dialog_singlechoice_material, object :
@@ -185,6 +186,13 @@ class SubGoalCursorAdapter: CursorRecyclerViewAdapter<SubGoalCursorAdapter.ViewH
                                    extras = extras2
                                }
                            }
+
+                           Log.i("GOAL", "%%%%%%%%%% SubGoalCursorAdapter reload item list: "
+                                   +  activity)
+                           activity?.loaderManager?.restartLoader(GoalsConstant.SUBGOAL, null,
+                                   activity)
+                           activity?.loaderManager?.restartLoader(GoalsConstant.GOAL, null,
+                                   activity)
 
                        }
                    }

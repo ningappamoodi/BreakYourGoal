@@ -8,7 +8,6 @@
     android:fitsSystemWindows="true"
     android:background="#f0f0f0">
 
-
     <android.support.design.widget.AppBarLayout
         android:id="@+id/search_app_bar_layout"
         android:layout_width="match_parent"
@@ -26,6 +25,10 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_add_goal"/>
+    <FrameLayout  android:id="@+id/item_detail_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?android:attr/actionBarSize"
+        />
 
 </android.support.design.widget.CoordinatorLayout>

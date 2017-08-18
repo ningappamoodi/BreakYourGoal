@@ -11,4 +11,7 @@
     app:layoutManager="LinearLayoutManager"
     tools:context="com.moodi.breakyourgoal.ItemListActivity"
     tools:listitem="@layout/item_list_content"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     />
