@@ -19,8 +19,6 @@ class SubGoalListItem {
         fun fromCursor(cursor: Cursor) : SubGoalListItem{
             val listItem = SubGoalListItem()
 
-            Log.i("GOAL", "################ value @0 : " + cursor.getString(1))
-
             listItem.subGoalId = cursor.getString(0)
             listItem.subGoalName = cursor.getString(1)
             listItem.statusTxt = cursor.getString(3)

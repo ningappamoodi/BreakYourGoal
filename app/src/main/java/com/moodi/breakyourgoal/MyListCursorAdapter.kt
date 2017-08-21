@@ -81,13 +81,13 @@ class MyListCursorAdapter : CursorRecyclerViewAdapter<MyListCursorAdapter.ViewHo
 
    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
 
-       Log.i("GOAL", "################# onBindViewHolder")
+       Log.d("GOAL", "onBindViewHolder")
 
         super.cursor?.moveToPosition(position)
         val myListItem = MyListItem.fromCursor(super.cursor!!)
 
-       Log.i("GOAL", "$$$$$$$$$$$$$$$$$$ newDataPosition: " + newDataPosition)
-       Log.i("GOAL", "$$$$$$$$$$$$$$$$$$ viewHolder.goalId.text.toString() : "
+       Log.d("GOAL", "newDataPosition: " + newDataPosition)
+       Log.d("GOAL", "viewHolder.goalId.text.toString() : "
                + viewHolder.goalId.text.toString())
 
 

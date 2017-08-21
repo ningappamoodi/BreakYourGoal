@@ -71,7 +71,7 @@ class AddGoalFragment : Fragment() {
         goalId = activity.findViewById<TextView>(R.id.goal_id)
         val maxId: Int = cursor.getInt(0) + 1
 
-        Log.i("GOAL", "################ maxId: " + maxId)
+        Log.d("GOAL", "maxId: " + maxId)
         goalId?.text = maxId.toString()
 
         subGoalList = activity.findViewById<RecyclerView>(R.id.add_goal_subgoal_list)
@@ -135,7 +135,7 @@ class AddGoalFragment : Fragment() {
 
     fun saveGoal(view: View) {
 
-        Log.i("GOAL", "#################### In saveGoal")
+        Log.d("GOAL", "In saveGoal")
 
         val projection = arrayOf("_id", "SubGoalName", "GoalId", "Status", "TargetDate")
 
@@ -157,17 +157,6 @@ class AddGoalFragment : Fragment() {
         val from = arrayOf("_id", "SubGoalName")
         val to = intArrayOf(R.id.subgoal_id, R.id.subgoal_item_goal_name)
 
-        //  val adapter = SimpleCursorAdapter(this, R.layout.item_list_subgoal, c, from, to, 0)
-
-        if(recyclerAdapter == null) {
-
-            Log.i("GOAL", "############ recyclerAdapter is null!! ")
-        } else {
-            Log.i("GOAL", "############ recyclerAdapter is not null!! ")
-        }
-
-        // extras = recyclerAdapter?.extras
-
         val values = ContentValues()
         values.put("GoalName", add_goal_goal_name.text.toString())
         values.put("Category", add_goal_category.selectedItem.toString())
@@ -177,7 +166,7 @@ class AddGoalFragment : Fragment() {
 
         val uri: Uri = activity.contentResolver.insert(GoalsConstant.GOAL_LIST_CONTENT_URI, values)
 
-        Log.i("GOAL", "############## uri.lastPathSegment : " + uri.lastPathSegment)
+        Log.d("GOAL", "uri.lastPathSegment : " + uri.lastPathSegment)
 
         val sharedPref = activity.getSharedPreferences("GOALS", AppCompatActivity.MODE_PRIVATE)
         val editor = sharedPref.edit()
@@ -190,7 +179,7 @@ class AddGoalFragment : Fragment() {
 
             while (!recyclerAdapter?.extras!!.isAfterLast) {
 
-                Log.i("GOAL", "##################### cursor index : "
+                Log.d("GOAL", "cursor index : "
                         + recyclerAdapter?.extras!!.getString(0))
 
                 val values = ContentValues()
@@ -231,9 +220,9 @@ class AddGoalFragment : Fragment() {
 
     fun subgoalAdd(view: View) {
 
-        Log.i("GOAL", "Inside subgoalAdd!! ")
+        Log.d("GOAL", "Inside subgoalAdd!! ")
 
-        Log.i("GOAL", "subgoalName: " + subGoalDialogFragment!!.subgoalName?.text.toString())
+        Log.d("GOAL", "subgoalName: " + subGoalDialogFragment!!.subgoalName?.text.toString())
 
         if(!subGoalDialogFragment!!.validate()) {
 
@@ -252,7 +241,7 @@ class AddGoalFragment : Fragment() {
             matrixCursor = recyclerAdapter?.extras
         }
 
-        Log.i("GOAL", "recyclerAdapter : " + matrixCursor)
+        Log.d("GOAL", "recyclerAdapter : " + matrixCursor)
 
 
         val count = matrixCursor!!.count + 1
@@ -263,7 +252,7 @@ class AddGoalFragment : Fragment() {
         val cursors = arrayOf<Cursor>(matrixCursor)
         extendedCursor = MergeCursor(cursors)
 
-        Log.i("GOAL", "################# cursor count: " + matrixCursor.count)
+        Log.d("GOAL", "cursor count: " + matrixCursor.count)
 
         if(recyclerAdapter == null) {
 
@@ -275,7 +264,7 @@ class AddGoalFragment : Fragment() {
 
         recyclerAdapter?.extras = matrixCursor
 
-        Log.i("GOAL", "$$$$$$$$$$$$$ InAddGoalFragment: is item list acivity? : " + (activity is ItemListActivity))
+        Log.d("GOAL", "InAddGoalFragment: is item list acivity? : " + (activity is ItemListActivity))
 
         if(activity is ItemListActivity)
         activity.loaderManager.restartLoader(GoalsConstant.GOAL, null, activity as ItemListActivity)

@@ -120,10 +120,10 @@ class SubGoalDialogFragment : DialogFragment(), DatePickerI {
     fun subgoalAdd(view: View) {
 
 
-        Log.i("GOAL", "Inside subgoalAdd!! ")
+        Log.d("GOAL", "Inside subgoalAdd!! ")
 
-        Log.i("GOAL", "subgoalName: " + subgoalName?.text.toString())
-        Log.i("GOAL", "subgoalName length: "
+        Log.d("GOAL", "subgoalName: " + subgoalName?.text.toString())
+        Log.d("GOAL", "subgoalName length: "
                 + subgoalName?.text.toString().length)
 
 
@@ -145,7 +145,7 @@ class SubGoalDialogFragment : DialogFragment(), DatePickerI {
 
         fragmentItemDetail.loaderManager.restartLoader(GoalsConstant.SUBGOAL, null, fragmentItemDetail)
 
-        Log.i("GOAL", "$$$$$$$$$$$$$ In item detail fragment is item list acivity? : "
+        Log.d("GOAL", "In item detail fragment is item list acivity? : "
                 + (activity is ItemListActivity))
 
         if(activity is ItemListActivity) {

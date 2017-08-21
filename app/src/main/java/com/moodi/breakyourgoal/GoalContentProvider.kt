@@ -57,7 +57,7 @@ class GoalContentProvider : ContentProvider() {
 
     override fun query(uri: Uri?, projection: Array<out String>?, selection: String?, selectionArgs: Array<out String>?, sortOrder: String?): Cursor {
 
-        Log.i("GOAL", "##################### In Goal Content provider Query method")
+        Log.d("GOAL", "In Goal Content provider Query method")
         val qb = SQLiteQueryBuilder()
 
 
@@ -73,7 +73,7 @@ class GoalContentProvider : ContentProvider() {
 
        val c = qb.query(db, projection, selection, selectionArgs, null, null, sortOrder) as Cursor
 
-        Log.i("GOAL", "##################### In Goal Content provider Query method: Count : " + c.count)
+        Log.d("GOAL", "In Goal Content provider Query method: Count : " + c.count)
 
         return c;
     }
@@ -84,7 +84,6 @@ class GoalContentProvider : ContentProvider() {
 
         db = dbHelper.getWritableDatabase() as SQLiteDatabase
 
-        Log.i("GOAL", "########################## db" + db)
         return if (db == null) false else true
     }
 

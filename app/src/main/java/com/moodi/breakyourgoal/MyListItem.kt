@@ -23,7 +23,7 @@ class MyListItem {
         fun fromCursor(cursor: Cursor) : MyListItem{
             val listItem = MyListItem()
 
-            Log.i("GOAL", "################ value @0 : " + cursor.getString(1))
+            Log.d("GOAL", "value @0 : " + cursor.getString(1))
 
             listItem.goalId = cursor.getString(0)
             listItem.goalName = cursor.getString(1)
@@ -49,11 +49,11 @@ class MyListItem {
 
             if(cursor.count == 0) return data
 
-            Log.i("GOAL", "################ fromCursorForStatus value @0 : " + cursor.getString(0))
+            Log.d("GOAL", "fromCursorForStatus value @0 : " + cursor.getString(0))
 
             while (!cursor.isAfterLast) {
 
-                Log.i("GOAL", "################# cursor value 0 1 : "
+                Log.d("GOAL", "cursor value 0 1 : "
                         + cursor.getString(0) + ":" + cursor.getString(1))
 
                 var i: Int = 0
@@ -67,7 +67,7 @@ class MyListItem {
                 cursor.moveToNext()
             }
 
-            Log.i("GOAL", "################# fromCursorForStatus keys: "
+            Log.d("GOAL", "fromCursorForStatus keys: "
                     +data.keys)
 
             return data

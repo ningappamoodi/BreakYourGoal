@@ -70,7 +70,7 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
         super.onCreate(savedInstanceState)
 
 
-        Log.i("GOAL", "$$$$$$$$$$$$$$$$$ In ItemDetailFragment onCreate")
+        Log.d("GOAL", "In ItemDetailFragment onCreate")
 
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
@@ -85,14 +85,14 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
                         resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)) {
 
             goalId = arguments.getString("GoalId")
-            Log.i("GOAL", "############# goalId for landscape: " + goalId)
+            Log.d("GOAL", "goalId for landscape: " + goalId)
 
         }
         else {
 
             goalId = activity.intent.getStringExtra("GoalId")
 
-            Log.i("GOAL", "############# goalId: " + goalId)
+            Log.d("GOAL", "goalId: " + goalId)
 
            // val activity = this.activity
 
@@ -124,11 +124,9 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
             goalId = activity.intent.getStringExtra("GoalId")
         }
 
-        Log.i("GOAL", "############# ItemDetailFragment onActivityCreated goalId: "
+        Log.d("GOAL", "ItemDetailFragment onActivityCreated goalId: "
                 + goalId)
-        Log.i("GOAL", "############# Orientation : " + resources.configuration.orientation)
-        Log.i("GOAL", "############# Orientation? : "
-                + (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT))
+        Log.d("GOAL", "Orientation : " + resources.configuration.orientation)
 
         if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
 
@@ -136,17 +134,17 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
             val editor = sharedPref.edit()
             editor.putString("GoalId", goalId)
             editor.commit()
-            Log.i("GOAL", "############# goalId for landscape from shared prefs : "
+            Log.d("GOAL", "goalId for landscape from shared prefs : "
                     + sharedPref.getString("GoalId", null))
         }
 
-        Log.i("GOAL", "########## onActivityCreated goalId: " + goalId)
+        Log.d("GOAL", "onActivityCreated goalId: " + goalId)
 
         val addSubGoalBtn = activity.findViewById<Button>(R.id.item_detail_add_sub_goal)
         //val subGoalDatePicker = activity.findViewById<EditText>(R.id.subgoal_date)
 
         if (addSubGoalBtn == null) {
-            Log.i("GOAL", "############### addSubGoalBtn: " + addSubGoalBtn)
+            Log.d("GOAL", "addSubGoalBtn: " + addSubGoalBtn)
         }
 
         //val subGoalDialogFragment = SubGoalDialogFragment()
@@ -167,8 +165,6 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val rootView = inflater!!.inflate(R.layout.item_detail, container, false)
-
-        Log.i("GOAL", "################## In onCreateView")
 
         idGoalTitle =  rootView.findViewById(R.id.goal_detail_title)
         subGoalCount =       rootView.findViewById(R.id.item_detail_subgoal_count)
@@ -191,7 +187,6 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
     }
     override fun onLoaderReset(loader: Loader<Cursor>?) {
 
-        Log.i("GOAL", "################ onLoaderReset")
          val cursorLoader = loader as CursorLoader
         recyclerAdapter.swapCursor(cursorLoader.loadInBackground())
 
@@ -236,7 +231,7 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
                 when(id) {
          GoalsConstant.GOAL -> {
 
-             Log.i("GOAL", "################ In onCreateLoader: goalId: "
+             Log.d("GOAL", "In onCreateLoader: goalId: "
                      + goalId)
              projection = arrayOf("_id", "GoalName", "Category", "Duration", "FromDate", "ToDate")
              cursorLoader = CursorLoader(context, GoalsConstant.GOAL_LIST_CONTENT_URI,
@@ -260,7 +255,7 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
         subGoalCount?.text = cursor.count.toString()
 
-        Log.i("GOAL", "################# cursor count: " + cursor?.count)
+        Log.d("GOAL", "cursor count: " + cursor?.count)
 
 
         if (activity is ItemListActivity) recyclerAdapter = SubGoalCursorAdapter(context, cursor,

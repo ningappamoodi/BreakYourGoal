@@ -71,8 +71,8 @@ class AddGoalActivity : AppCompatActivity() {
     override fun onConfigurationChanged(newConfig: Configuration?) {
         super.onConfigurationChanged(newConfig)
 
-        Log.i("GOAL", "$$$$$$$$$$$$$$$$ AddGoalActivity onConfigurationChanged: ")
-        Log.i("GOAL", "newConfig?.orientation:  " + newConfig?.orientation)
+        Log.d("GOAL", "$$$$$$$$$$$$$$$$ AddGoalActivity onConfigurationChanged: ")
+        Log.d("GOAL", "newConfig?.orientation:  " + newConfig?.orientation)
 
         if (newConfig?.orientation == Configuration.ORIENTATION_LANDSCAPE) {
 

@@ -69,7 +69,7 @@ class SubGoalCursorAdapter: CursorRecyclerViewAdapter<SubGoalCursorAdapter.ViewH
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
 
-        Log.i("GOAL", "######### SubGoalCursorAdapter : onCreateViewHolder : ")
+        Log.d("GOAL", "SubGoalCursorAdapter : onCreateViewHolder : ")
 
         val itemView = LayoutInflater.from(parent!!.getContext())
                 .inflate(R.layout.item_list_subgoal, parent, false)
@@ -79,7 +79,7 @@ class SubGoalCursorAdapter: CursorRecyclerViewAdapter<SubGoalCursorAdapter.ViewH
 
    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
 
-       Log.i("GOAL", "################# onBindViewHolder")
+       Log.d("GOAL", "onBindViewHolder")
 
         super.cursor?.moveToPosition(position)
         val myListItem = SubGoalListItem.fromCursor(super.cursor!!)
@@ -89,7 +89,7 @@ class SubGoalCursorAdapter: CursorRecyclerViewAdapter<SubGoalCursorAdapter.ViewH
        viewHolder.targetDate.setText(myListItem.targetDate)
        viewHolder.statusTxt.setText(myListItem.statusTxt)
 
-       Log.i("GOAL", "########### statusTxt : " + myListItem.statusTxt)
+       Log.d("GOAL", "statusTxt : " + myListItem.statusTxt)
        var color: Int? = null
        when(myListItem.statusTxt) {
 
@@ -106,7 +106,7 @@ class SubGoalCursorAdapter: CursorRecyclerViewAdapter<SubGoalCursorAdapter.ViewH
        viewHolder.editSubGoal.setOnClickListener(object : View.OnClickListener {
            override fun onClick(p0: View?) {
 
-               Log.i("GOAL", "##################### editSubGoal onClick listner")
+               Log.d("GOAL", "editSubGoal onClick listner")
 
 
                val builder =  AlertDialog.Builder(context!!)
@@ -129,10 +129,10 @@ class SubGoalCursorAdapter: CursorRecyclerViewAdapter<SubGoalCursorAdapter.ViewH
                            val statusArray = context!!.resources.
                                    getStringArray(R.array.array_sub_goal_status)
 
-                           Log.i("GOAL", "##################### statusArray  : "+
+                           Log.d("GOAL", "statusArray  : "+
                                    statusArray.size)
 
-                           Log.i("GOAL", "##################### selected array : "+
+                           Log.d("GOAL", "selected array : "+
                                    statusArray.get(selected))
 
                            val values = ContentValues()
@@ -154,7 +154,7 @@ class SubGoalCursorAdapter: CursorRecyclerViewAdapter<SubGoalCursorAdapter.ViewH
                                viewHolder.statusImg.setColorFilter(color!!)
                            }
 
-                           Log.i("GOAL", "########################## subgoal id : "
+                           Log.d("GOAL", "subgoal id : "
                                    + viewHolder.subGoalId.text.toString())
 
                            if(viewHolder.subGoalId.text.toString().toInt() < 0) {
@@ -173,7 +173,7 @@ class SubGoalCursorAdapter: CursorRecyclerViewAdapter<SubGoalCursorAdapter.ViewH
                                                    extras!!.getString(4)))
                                        } else {
 
-                                           Log.i("GOAL", "############## myListItem.statusTxt.toString: " +
+                                           Log.d("GOAL", "myListItem.statusTxt.toString: " +
                                                    myListItem.statusTxt.toString())
                                            extras2.addRow(arrayOf(extras!!.getString(0), extras!!.getString(1),
                                                    extras!!.getString(2), statusArray.get(selected),
@@ -187,7 +187,7 @@ class SubGoalCursorAdapter: CursorRecyclerViewAdapter<SubGoalCursorAdapter.ViewH
                                }
                            }
 
-                           Log.i("GOAL", "%%%%%%%%%% SubGoalCursorAdapter reload item list: "
+                           Log.d("GOAL", "SubGoalCursorAdapter reload item list: "
                                    +  activity)
                            activity?.loaderManager?.restartLoader(GoalsConstant.SUBGOAL, null,
                                    activity)
@@ -211,9 +211,9 @@ class SubGoalCursorAdapter: CursorRecyclerViewAdapter<SubGoalCursorAdapter.ViewH
        viewHolder.deleteSubGoal.setOnClickListener(object : View.OnClickListener {
            override fun onClick(view: View?) {
 
-               Log.i("GOAL", "##################### deleteSubGoal onClick listner")
+               Log.d("GOAL", "deleteSubGoal onClick listner")
 
-               Log.i("GOAL", "################## subGoalId value: " + myListItem.subGoalId.toString())
+               Log.d("GOAL", "subGoalId value: " + myListItem.subGoalId.toString())
 
 
                context!!.contentResolver.delete(GoalsConstant.SUB_GOAL_CONTENT_URI,"_id=?",
@@ -223,8 +223,8 @@ class SubGoalCursorAdapter: CursorRecyclerViewAdapter<SubGoalCursorAdapter.ViewH
                mRecyclerView!!.post(object : Runnable {
                    override fun run() {
 
-                       Log.i("GOAL", "############ id : " + view!!.id)
-                       Log.i("GOAL", "############ verticalScrollbarPosition : "
+                       Log.d("GOAL", "id : " + view!!.id)
+                       Log.d("GOAL", "verticalScrollbarPosition : "
                                + view!!.verticalScrollbarPosition)
 
                        var c: Cursor? = null
@@ -241,8 +241,8 @@ class SubGoalCursorAdapter: CursorRecyclerViewAdapter<SubGoalCursorAdapter.ViewH
                            extras!!.moveToFirst()
                            while (!extras!!.isAfterLast) {
 
-                               Log.i("GOAL", "########### subGoalId: " + myListItem.subGoalId.toString())
-                               Log.i("GOAL", "########### _id: " + extras!!.getString(0))
+                               Log.d("GOAL", "subGoalId: " + myListItem.subGoalId.toString())
+                               Log.d("GOAL", "_id: " + extras!!.getString(0))
                                if (!(TextUtils.equals(myListItem.subGoalId.toString(), extras!!.getString(0)))) {
                                    extras2.addRow(arrayOf(extras!!.getString(0), extras!!.getString(1),
                                            extras!!.getString(2), extras!!.getString(3),

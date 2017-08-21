@@ -61,16 +61,16 @@ class ItemListActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curs
         val sharedPref = getSharedPreferences("GOALS", MODE_PRIVATE)
 
 
-        Log.i("GOAL", "AddGoalFragment: " +  sharedPref.contains("AddGoalFragment"))
-        Log.i("GOAL", "ItemDetailFragment: " +  sharedPref.contains("ItemDetailFragment"))
+        Log.d("GOAL", "AddGoalFragment: " +  sharedPref.contains("AddGoalFragment"))
+        Log.d("GOAL", "ItemDetailFragment: " +  sharedPref.contains("ItemDetailFragment"))
 
-        Log.i("GOAL", "AddGoalFragment: " +  sharedPref.getString("AddGoalFragment", null))
+        Log.d("GOAL", "AddGoalFragment: " +  sharedPref.getString("AddGoalFragment", null))
 
        if( sharedPref.contains("AddGoalFragment")) {
 
            val arguments = Bundle()
 
-           Log.i("GOAL", " In Home Activity fragment: ")
+           Log.d("GOAL", " In Home Activity fragment: ")
            // arguments.putString("GoalId", goalId.text.toString())
            //arguments.putString("goalName", goalName.text.toString())
 
@@ -88,7 +88,7 @@ class ItemListActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curs
 
            val arguments = Bundle()
 
-           Log.i("GOAL", " In List Activity fragment ItemDetailFragment : ")
+           Log.d("GOAL", " In List Activity fragment ItemDetailFragment : ")
            // arguments.putString("GoalId", goalId.text.toString())
            //arguments.putString("goalName", goalName.text.toString())
 
@@ -114,7 +114,7 @@ class ItemListActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curs
             val intent =  Intent(baseContext, AddGoalActivity::class.java)
             startActivity(intent)*/
 
-            Log.i("GOAL", " In Home Activity fab.setOnClickListener  : ")
+            Log.d("GOAL", " In Home Activity fab.setOnClickListener  : ")
 
             if ((resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
                     == Configuration.SCREENLAYOUT_SIZE_XLARGE &&
@@ -126,7 +126,7 @@ class ItemListActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curs
                 // using a fragment transaction.
                 val arguments = Bundle()
 
-                Log.i("GOAL", " In Home Activity fragment: ")
+                Log.d("GOAL", " In Home Activity fragment: ")
                  // arguments.putString("GoalId", goalId.text.toString())
                 //arguments.putString("goalName", goalName.text.toString())
 
@@ -141,20 +141,11 @@ class ItemListActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curs
 
             } else {
 
-                Log.i("GOAL", " In Home Activity activity: ")
+                Log.d("GOAL", " In Home Activity activity: ")
                 val intent =  Intent(baseContext, AddGoalActivity::class.java)
                 startActivity(intent)
             }
         }
-
-
-
-      /*  val fragment = supportFragmentManager.findFragmentById(R.id.item_detail_container)
-
-        Log.i("GOAL", "$$$$$$$$$$$$$$$ fragment: " + fragment)
-        if(fragment != null) {
-            supportFragmentManager.beginTransaction().remove(fragment).commit()
-        }*/
 
         val recyclerView = findViewById<View>(R.id.item_list)!!
         setupRecyclerView(recyclerView as RecyclerView)
@@ -199,7 +190,7 @@ class ItemListActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curs
 
        recyclerView.addOnItemTouchListener(RecyclerItemClickListner(this, object :RecyclerItemClickListner.OnItemClickListener {
            override fun onItemClick(view: View, position: Int) {
-              Log.i("GOAL", "Inside addOnItemTouchListener")
+              Log.d("GOAL", "Inside addOnItemTouchListener")
 
               // view.setBackgroundColor(ContextCompat.getColor(baseContext, R.color.colorGrey))
                view.isSelected = true
@@ -211,7 +202,7 @@ class ItemListActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curs
                val goalName = view.findViewById<TextView>(R.id.list_item_goal_name)
 
 
-               Log.i("GOAL", "$$$$$$$$$$$$$ GoalId: " + goalId.text.toString())
+               Log.d("GOAL", "$$$$$$$$$$$$$ GoalId: " + goalId.text.toString())
 
                if ((resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
                        == Configuration.SCREENLAYOUT_SIZE_XLARGE &&
@@ -254,7 +245,7 @@ class ItemListActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curs
                 val projection = arrayOf("_id", "GoalName", "Category", "Duration", "FromDate", "ToDate")
 
 
-                Log.i("GOAL", "################## Item list activity : On create loader method : ")
+                Log.d("GOAL", "Item list activity : On create loader method : ")
 
                 loader = CursorLoader(this, GoalsConstant.GOAL_LIST_CONTENT_URI,
                         projection, null, null,null)
@@ -283,7 +274,7 @@ class ItemListActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curs
         // the queried Cursor with the SimpleCursorAdapter.
                     //recyclerAdapter.newDataPosition = cursor!!.count - 1
 
-                Log.i("GOAL", "%%%%%%%%%%%% ItemListActivity : onLoadFinished: goal data")
+                Log.d("GOAL", "ItemListActivity : onLoadFinished: goal data")
                     recyclerAdapter.swapCursor(cursor!!)
                     recyclerAdapter.notifyDataSetChanged()
 
@@ -291,7 +282,7 @@ class ItemListActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curs
 
             GoalsConstant.SUBGOAL -> {
 
-                Log.i("GOAL", "############# onLoadFinished : SUBGOAL: cursor?.count: "
+                Log.d("GOAL", "onLoadFinished : SUBGOAL: cursor?.count: "
                         + cursor?.count)
                 recyclerAdapter.statusMap = MyListItem.fromCursorForStatus(cursor!!)
                 recyclerAdapter.swapCursor(recyclerAdapter.cursor!!)
@@ -301,7 +292,7 @@ class ItemListActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curs
 
     override fun onLoaderReset(p0: Loader<Cursor>?) {
         //       recyclerAdapter!!.swapCursor(null!!)
-        Log.i("GOAL", "#### In list activity onLoaderReset")
+        Log.d("GOAL", "In list activity onLoaderReset")
     }
 
 
@@ -309,8 +300,8 @@ class ItemListActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curs
         super.onConfigurationChanged(newConfig)
 
 
-        Log.i("GOAL", "######$$$$ Inside onConfigurationChanged!! ")
-        Log.i("GOAL", "######$$$$ newConfig?.orientation : " + newConfig?.orientation)
+        Log.d("GOAL", "Inside onConfigurationChanged!! ")
+        Log.d("GOAL", "newConfig?.orientation : " + newConfig?.orientation)
 
 
       if (newConfig?.orientation == Configuration.ORIENTATION_PORTRAIT) {
