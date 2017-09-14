@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Goal Tracker</string>
     <string name="action_settings">Settings</string>
+    <string name="action_delete">Delete</string>
 
     <string-array name="array_add_goal_category">
         <item>Select category</item>

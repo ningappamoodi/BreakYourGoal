@@ -30,7 +30,6 @@ import android.util.Log
 import android.util.TypedValue
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import kotlinx.android.synthetic.main.item_detail.*
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 

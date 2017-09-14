@@ -14,16 +14,13 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.content.ContextCompat
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
 
 import android.support.v7.widget.DividerItemDecoration
 import android.util.Log
-import android.view.MotionEvent
-import android.view.GestureDetector
 import android.text.method.Touch.onTouchEvent
+import android.view.*
+import android.widget.AdapterView
 import android.widget.FrameLayout
 
 
@@ -57,6 +54,7 @@ class ItemListActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curs
         setSupportActionBar(toolbar)
         toolbar.title = title
 
+       // setHasOptionsMenu(true)
 
         val sharedPref = getSharedPreferences("GOALS", MODE_PRIVATE)
 
@@ -148,6 +146,7 @@ class ItemListActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curs
         }
 
         val recyclerView = findViewById<View>(R.id.item_list)!!
+
         setupRecyclerView(recyclerView as RecyclerView)
 
         if (findViewById<View>(R.id.item_detail_container) != null) {
@@ -162,8 +161,20 @@ class ItemListActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curs
         loaderManager.initLoader(GoalsConstant.GOAL, null, this)
     }
 
-    private fun setupRecyclerView(recyclerView: RecyclerView) {
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+       // setIntent(intent)
+        Log.d("GOAL", " ###### onNewIntent: ")
 
+        val recyclerView = findViewById<View>(R.id.item_list)!!
+
+        setupRecyclerView(recyclerView as RecyclerView)
+
+        loaderManager.initLoader(GoalsConstant.SUBGOAL, null, this)
+        loaderManager.initLoader(GoalsConstant.GOAL, null, this)
+    }
+
+    private fun setupRecyclerView(recyclerView: RecyclerView) {
 
         val projection = arrayOf("_id", "GoalName", "Category", "Duration", "FromDate", "ToDate")
         val selection = null
@@ -172,6 +183,8 @@ class ItemListActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curs
 
         val c = contentResolver.query(GoalsConstant.GOAL_LIST_CONTENT_URI, projection, selection,
                 selectionArgs, sortOrder)
+
+        recyclerView.addItemDecoration(VerticalDividerItemDecoration(20, true))
 
         recyclerAdapter = MyListCursorAdapter(this, c)
 
@@ -186,7 +199,6 @@ class ItemListActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curs
         editor.commit()
 
         recyclerView.adapter = recyclerAdapter
-
 
        recyclerView.addOnItemTouchListener(RecyclerItemClickListner(this, object :RecyclerItemClickListner.OnItemClickListener {
            override fun onItemClick(view: View, position: Int) {
@@ -324,6 +336,12 @@ class ItemListActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curs
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+
+        menuInflater.inflate(R.menu.menu_home, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
 }
 
 
@@ -368,4 +386,11 @@ class RecyclerItemClickListner :
 
     }
 
+    /*override fun onCreateOptionsMenu(menu: Menu, inflater:MenuInflater): Boolean {
+        //val inflater = getMenuInflater()
+        inflater.inflate(R.menu.menu_home, menu)
+        return true
+    }*/
+
+  //  override fun onM
 }

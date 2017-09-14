@@ -2,12 +2,16 @@ package com.moodi.breakyourgoal
 
 
 import android.content.Context
+import android.content.res.Configuration
 import android.database.Cursor
+import android.graphics.Color
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -38,7 +42,7 @@ class MyListCursorAdapter : CursorRecyclerViewAdapter<MyListCursorAdapter.ViewHo
         this.cursor1 = cursor
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnLongClickListener {
 
         var goalId: TextView
         var goalName: TextView
@@ -70,6 +74,11 @@ class MyListCursorAdapter : CursorRecyclerViewAdapter<MyListCursorAdapter.ViewHo
             listItemRow = view.findViewById(R.id.list_item_row)
 
         }
+
+        override fun onLongClick(p0: View?): Boolean {
+
+            return true
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
@@ -98,25 +107,41 @@ class MyListCursorAdapter : CursorRecyclerViewAdapter<MyListCursorAdapter.ViewHo
        viewHolder.goalDuration.setText(myListItem.goalDuration)
        viewHolder.goalDate.setText(myListItem.goalDate)
 
-       if(position == selectedPosition) {
+       if ((context!!.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
+               == Configuration.SCREENLAYOUT_SIZE_XLARGE &&
+               context!!.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) ||
+               (context!!.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
+                       == Configuration.SCREENLAYOUT_SIZE_LARGE &&
+                       context!!.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)) {
 
-           ( viewHolder.listItemRow.layoutParams as RecyclerView.LayoutParams)
-                   .setMargins(8, 8, 0, 8)
+          if (position == selectedPosition) {
 
-       }
+             /* (viewHolder.listItemRow.layoutParams as RecyclerView.LayoutParams)
+                      .setMargins(8, 8, 0, 8)*/
 
-       else if(!TextUtils.isEmpty(viewHolder.goalId.text.toString()) &&
-               viewHolder.goalId.text.toString().toInt() == newDataPosition) {
+              val card =  viewHolder.listItemRow as CardView
+              card.setCardBackgroundColor(ContextCompat.getColor(context!!, R.color.colorPurple_50))
 
-           viewHolder.listItemRow.isSelected = true
-           ( viewHolder.listItemRow.layoutParams as RecyclerView.LayoutParams)
-                   .setMargins(8, 8, 0, 8)
-           newDataPosition = null
-       } else {
-           ( viewHolder.listItemRow.layoutParams as RecyclerView.LayoutParams)
-                   .setMargins(8, 8, 8, 8)
-           viewHolder.listItemRow.isSelected = false
-       }
+          } else if (!TextUtils.isEmpty(viewHolder.goalId.text.toString()) &&
+                  viewHolder.goalId.text.toString().toInt() == newDataPosition) {
+
+              viewHolder.listItemRow.isSelected = true
+             /* (viewHolder.listItemRow.layoutParams as RecyclerView.LayoutParams)
+                      .setMargins(8, 8, 0, 8)*/
+
+              val card =  viewHolder.listItemRow as CardView
+              card.setCardBackgroundColor(ContextCompat.getColor(context!!, R.color.colorPurple_50))
+              newDataPosition = null
+          } else {
+             /* (viewHolder.listItemRow.layoutParams as RecyclerView.LayoutParams)
+                      .setMargins(8, 8, 8, 8)*/
+              viewHolder.listItemRow.isSelected = false
+
+              val card =  viewHolder.listItemRow as CardView
+              card.setCardBackgroundColor(Color.WHITE)
+
+          }
+      }
 
 
        var value = statusMap?.get(myListItem.goalId + ":" + GoalsConstant.IN_PROGRESS)

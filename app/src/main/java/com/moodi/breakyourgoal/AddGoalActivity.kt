@@ -40,6 +40,8 @@ class AddGoalActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
 
+        Log.i("GOAL", "########## AddGoalActivity: onCreate");
+
         if ((resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
                 == Configuration.SCREENLAYOUT_SIZE_XLARGE &&
                 resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) ||
@@ -81,5 +83,10 @@ class AddGoalActivity : AppCompatActivity() {
 
             editor.putString("fromActivity", "AddGoal")
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        //subgoalFr
     }
 }

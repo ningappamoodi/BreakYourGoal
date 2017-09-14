@@ -29,6 +29,13 @@ class SubGoalDialogFragment : DialogFragment(), DatePickerI {
 
     val datePicker = this as DatePickerI
 
+   companion object {
+
+      fun  newInstance() : SubGoalDialogFragment{
+         return SubGoalDialogFragment()
+       }
+   }
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
         val view = activity.layoutInflater.inflate(R.layout.dialog_subgoal, null)
@@ -90,14 +97,14 @@ class SubGoalDialogFragment : DialogFragment(), DatePickerI {
     fun validate() : Boolean {
 
         var validate = true
-        if (TextUtils.isEmpty(subgoalName!!.text.toString())) {
+        if (subgoalName != null && TextUtils.isEmpty(subgoalName!!.text.toString())) {
 
             validate = false
            subgoalName?.setHintTextColor(Color.RED)
 
 
         }
-        if (TextUtils.isEmpty(subgoalDate!!.text.toString())) {
+        if (subgoalDate != null && TextUtils.isEmpty(subgoalDate!!.text.toString())) {
 
             validate = false
             subgoalDate?.setHintTextColor(Color.RED)

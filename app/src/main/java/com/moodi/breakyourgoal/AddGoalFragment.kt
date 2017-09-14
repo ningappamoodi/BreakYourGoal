@@ -6,11 +6,13 @@ import android.app.LoaderManager
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.database.Cursor
 import android.database.MatrixCursor
 import android.database.MergeCursor
 import android.net.Uri
 import android.os.Bundle
+import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -32,7 +34,7 @@ class AddGoalFragment : Fragment() {
 
     var goalId: TextView? = null
     var subGoalList: RecyclerView? = null
-    val subGoalDialogFragment  = SubGoalDialogFragment()
+    var subGoalDialogFragment: SubGoalDialogFragment?  = null
 
     var extendedCursor: MergeCursor? = null
     //var extras: MatrixCursor? = null
@@ -43,7 +45,23 @@ class AddGoalFragment : Fragment() {
         super.onCreate(savedInstanceState)
        //setContentView(R.layout.fragment_add_goal)
 
+        Log.i("GOAL", "########## AddGoalFragment: onCreate");
 
+        //Log.i("GOAL", "onConfigurationChanged!")
+        val ft = fragmentManager.beginTransaction()
+        val prev = fragmentManager.findFragmentByTag("subGoalDialogFragment")
+        if (prev != null) {
+            (prev as DialogFragment).dismiss()
+            ft.remove(prev)
+            ft.addToBackStack(null)
+            subGoalDialogFragment = SubGoalDialogFragment.newInstance() as SubGoalDialogFragment
+            subGoalDialogFragment?.show(fragmentManager, "subGoalDialogFragment")
+        } else {
+            subGoalDialogFragment = SubGoalDialogFragment.newInstance() as SubGoalDialogFragment
+        }
+        ft.commit();
+
+       // subGoalDialogFragment  = SubGoalDialogFragment()
 
     }
 
@@ -51,7 +69,7 @@ class AddGoalFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
 
-
+        Log.i("GOAL", "########## AddGoalFragment: onActivityCreated");
         val catAdapter = ArrayAdapter.createFromResource(activity, R.array.array_add_goal_category,
                 R.layout.support_simple_spinner_dropdown_item)
 
@@ -85,8 +103,7 @@ class AddGoalFragment : Fragment() {
         add_goal_add_subgoal_btn.setOnClickListener(object : View.OnClickListener {
             override fun onClick(p0: View?) {
 
-               // val subGoalDialogFragment = SubGoalDialogFragment()
-                subGoalDialogFragment.show(fragmentManager, "subGoalDialogFragment")
+                subGoalDialogFragment?.show(fragmentManager, "subGoalDialogFragment")
 
             }
         })
@@ -214,6 +231,7 @@ class AddGoalFragment : Fragment() {
 
         } else {
             val intent = Intent(activity, ItemListActivity::class.java)
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
             startActivity(intent)
         }
     }
@@ -269,7 +287,30 @@ class AddGoalFragment : Fragment() {
         if(activity is ItemListActivity)
         activity.loaderManager.restartLoader(GoalsConstant.GOAL, null, activity as ItemListActivity)
 
-        subGoalDialogFragment!!.dismiss()
+        if(subGoalDialogFragment != null)
+        subGoalDialogFragment?.dismiss()
     }
 
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
+
+
+
+    }
+
+    override fun onPause() {
+        super.onPause()
+        val ft = fragmentManager.beginTransaction()
+        val prev = fragmentManager.findFragmentByTag("subGoalDialogFragment")
+        if (prev != null) {
+            (prev as DialogFragment).dismiss()
+            ft.remove(prev)
+            ft.addToBackStack(null)
+        }
+    }
+    override fun onStop() {
+        super.onStop()
+
+
+    }
 }
