@@ -1,4 +1,4 @@
-package com.moodi.breakyourgoal
+package com.moodi.breakyourgoal.db
 
 import android.content.Context
 import android.database.Cursor

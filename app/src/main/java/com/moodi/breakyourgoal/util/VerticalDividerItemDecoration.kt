@@ -1,4 +1,4 @@
-package com.moodi.breakyourgoal
+package com.moodi.breakyourgoal.util
 
 import android.graphics.Rect
 import android.support.v7.widget.RecyclerView

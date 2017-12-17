@@ -1,35 +1,16 @@
-package com.moodi.breakyourgoal
+package com.moodi.breakyourgoal.addgoal
 
-import android.app.DatePickerDialog
-import android.app.Dialog
-import android.content.*
 import android.content.res.Configuration
-import android.database.Cursor
 
-import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.text.TextUtils
 import android.util.Log
-import android.view.View
-import android.view.inputmethod.InputMethodManager
-import android.widget.*
+import com.moodi.breakyourgoal.R
 import kotlinx.android.synthetic.main.activity_add_goal.*
-import kotlinx.android.synthetic.main.fragment_add_goal.*
-import java.util.*
-import android.database.MergeCursor
-import android.database.MatrixCursor
-import android.preference.Preference
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import java.util.prefs.Preferences
+import com.moodi.breakyourgoal.util.GoalActivityUtil
 
 
 class AddGoalActivity : AppCompatActivity() {
-
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,12 +23,7 @@ class AddGoalActivity : AppCompatActivity() {
 
         Log.i("GOAL", "########## AddGoalActivity: onCreate");
 
-        if ((resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
-                == Configuration.SCREENLAYOUT_SIZE_XLARGE &&
-                resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) ||
-                (resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
-                        == Configuration.SCREENLAYOUT_SIZE_LARGE &&
-                        resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)) {
+        if (GoalActivityUtil.isLargeScreenAndLandscape(resources)) {
 
             val sharedPref = getSharedPreferences("GOALS", MODE_PRIVATE)
             val editor = sharedPref.edit()
@@ -87,6 +63,5 @@ class AddGoalActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        //subgoalFr
     }
 }

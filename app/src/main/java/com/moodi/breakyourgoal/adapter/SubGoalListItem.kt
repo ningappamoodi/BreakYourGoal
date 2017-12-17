@@ -1,7 +1,6 @@
-package com.moodi.breakyourgoal
+package com.moodi.breakyourgoal.adapter
 
 import android.database.Cursor
-import android.util.Log
 
 /**
  * Created by ningappamoodi on 28/7/17.
@@ -16,7 +15,7 @@ class SubGoalListItem {
 
     companion object {
 
-        fun fromCursor(cursor: Cursor) : SubGoalListItem{
+        fun fromCursor(cursor: Cursor) : SubGoalListItem {
             val listItem = SubGoalListItem()
 
             listItem.subGoalId = cursor.getString(0)

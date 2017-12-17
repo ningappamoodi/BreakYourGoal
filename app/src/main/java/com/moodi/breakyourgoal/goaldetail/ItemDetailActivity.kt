@@ -1,35 +1,16 @@
-package com.moodi.breakyourgoal
+package com.moodi.breakyourgoal.goaldetail
 
-import android.app.DatePickerDialog
-import android.app.Dialog
-import android.content.ContentValues
-import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
-import android.database.Cursor
-import android.database.MatrixCursor
-import android.database.MergeCursor
-import android.graphics.Color
 import android.os.Bundle
-import android.support.design.widget.CollapsingToolbarLayout
-import android.support.design.widget.FloatingActionButton
-import android.support.design.widget.Snackbar
-import android.support.v4.app.DialogFragment
-import android.support.v7.widget.Toolbar
 import android.view.View
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.app.ActionBar
 import android.support.v4.app.NavUtils
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.text.TextUtils
-import android.util.Log
 import android.view.MenuItem
-import android.view.inputmethod.InputMethodManager
-import android.widget.DatePicker
-import android.widget.TextView
-import android.widget.Toast
-import java.util.*
+import com.moodi.breakyourgoal.R
+import com.moodi.breakyourgoal.dialogfragment.SubGoalDialogFragment
+import com.moodi.breakyourgoal.goallist.ItemListActivity
+import com.moodi.breakyourgoal.util.GoalActivityUtil
+import kotlinx.android.synthetic.main.activity_item_detail.*
 
 /**
  * An activity representing a single Item detail screen. This
@@ -52,8 +33,8 @@ class ItemDetailActivity : AppCompatActivity() {
 
 
 
-        val toolbar = findViewById<View>(R.id.detail_toolbar) as Toolbar
-        setSupportActionBar(toolbar)
+      //  val toolbar = findViewById<View>(R.id.detail_toolbar) as Toolbar
+        setSupportActionBar(detail_toolbar)
 
       /*  val fab = findViewById<View>(R.id.fab) as FloatingActionButton
         fab.setOnClickListener { view ->
@@ -86,19 +67,14 @@ class ItemDetailActivity : AppCompatActivity() {
                     .commit()
         }
 
-        val appBarLayout = findViewById<View>(R.id.toolbar_layout) as CollapsingToolbarLayout
-        if (appBarLayout != null) {
+        //val appBarLayout = findViewById<View>(R.id.toolbar_layout) as CollapsingToolbarLayout
+        if (toolbar_layout != null) {
             // appBarLayout.title = mItem!!.get("list_item_goal_date")
-            appBarLayout.title = "Goal details"
+            toolbar_layout.title = "Goal details"
             // appBarLayout.setExpandedTitleColor(resources.getColor(R.color.colorAccent, null))
         }
 
-        if ((resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
-                == Configuration.SCREENLAYOUT_SIZE_XLARGE &&
-                resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) ||
-                (resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
-                        == Configuration.SCREENLAYOUT_SIZE_LARGE &&
-                        resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)) {
+        if (GoalActivityUtil.isLargeScreenAndLandscape(resources)) {
 
             val sharedPref = getSharedPreferences("GOALS", MODE_PRIVATE)
             val editor = sharedPref.edit()
@@ -132,5 +108,4 @@ class ItemDetailActivity : AppCompatActivity() {
         subGoalDialogFragment!!.show(supportFragmentManager, "subGoalDialogFragment")
 
     }
-
 }

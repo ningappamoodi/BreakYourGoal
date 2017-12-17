@@ -1,4 +1,4 @@
-package com.moodi.breakyourgoal
+package com.moodi.breakyourgoal.adapter
 
 import android.database.Cursor
 import android.util.Log
@@ -20,7 +20,7 @@ class MyListItem {
 
     companion object {
 
-        fun fromCursor(cursor: Cursor) : MyListItem{
+        fun fromCursor(cursor: Cursor) : MyListItem {
             val listItem = MyListItem()
 
             Log.d("GOAL", "value @0 : " + cursor.getString(1))

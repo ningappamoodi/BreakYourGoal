@@ -10,7 +10,7 @@
     android:layout_marginRight="6dp"
     android:layout_marginTop="6dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context="com.moodi.breakyourgoal.ItemListActivity"
+    tools:context="com.moodi.breakyourgoal.goallist.ItemListActivity"
     tools:listitem="@layout/item_list_content"
     android:clickable="true"
     android:focusable="true"

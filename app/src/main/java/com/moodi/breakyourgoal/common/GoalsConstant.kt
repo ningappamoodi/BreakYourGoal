@@ -1,4 +1,4 @@
-package com.moodi.breakyourgoal
+package com.moodi.breakyourgoal.common
 
 import android.net.Uri
 

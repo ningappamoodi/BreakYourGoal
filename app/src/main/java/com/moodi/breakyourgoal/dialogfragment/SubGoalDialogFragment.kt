@@ -1,4 +1,4 @@
-package com.moodi.breakyourgoal
+package com.moodi.breakyourgoal.dialogfragment
 
 import android.app.Dialog
 import android.content.ContentValues
@@ -12,7 +12,11 @@ import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import kotlinx.android.synthetic.main.dialog_subgoal.*
+import com.moodi.breakyourgoal.R
+import com.moodi.breakyourgoal.addgoal.AddGoalFragment
+import com.moodi.breakyourgoal.common.GoalsConstant
+import com.moodi.breakyourgoal.goaldetail.ItemDetailFragment
+import com.moodi.breakyourgoal.goallist.ItemListActivity
 
 /**
  * Created by ningappamoodi on 3/8/17.
@@ -31,7 +35,7 @@ class SubGoalDialogFragment : DialogFragment(), DatePickerI {
 
    companion object {
 
-      fun  newInstance() : SubGoalDialogFragment{
+      fun  newInstance() : SubGoalDialogFragment {
          return SubGoalDialogFragment()
        }
    }
@@ -79,7 +83,7 @@ class SubGoalDialogFragment : DialogFragment(), DatePickerI {
 
                 }
                 else if(fragment is AddGoalFragment) {
-                    fragment.subgoalAdd(p0!!)
+                    fragment.presenter!!.subgoalAdd(p0!!)
                 }
             }
         })
@@ -157,8 +161,9 @@ class SubGoalDialogFragment : DialogFragment(), DatePickerI {
 
         if(activity is ItemListActivity) {
             activity.loaderManager.restartLoader(GoalsConstant.SUBGOAL, null,
-                    activity as ItemListActivity)
-            activity.loaderManager.restartLoader(GoalsConstant.GOAL, null, activity as ItemListActivity)
+                    (activity as ItemListActivity).presenter!!.getLoader())
+            activity.loaderManager.restartLoader(GoalsConstant.GOAL, null,
+                    (activity as ItemListActivity).presenter!!.getLoader())
         }
 
         dismiss()

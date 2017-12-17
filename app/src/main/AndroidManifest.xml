@@ -4,6 +4,7 @@
     >
 
     <application
+        android:name=".GoalApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -16,7 +17,7 @@
             android:label="@string/app_name"
            >
         </activity>
-        <activity android:name=".AddGoalActivity"
+        <activity android:name=".addgoal.AddGoalActivity"
             android:label="Add Goal"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"
@@ -28,7 +29,7 @@
         </activity>
 
         <activity
-            android:name=".ItemListActivity"
+            android:name=".goallist.ItemListActivity"
             android:label="@string/title_goal_list"
             android:theme="@style/AppTheme"
             android:configChanges="orientation">
@@ -39,19 +40,19 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ItemDetailActivity"
+            android:name=".goaldetail.ItemDetailActivity"
             android:label="@string/title_goal_detail"
-            android:parentActivityName=".ItemListActivity"
+            android:parentActivityName=".goallist.ItemListActivity"
             android:configChanges="orientation|density"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.moodi.breakyourgoal.ItemListActivity" />
+                android:value="com.moodi.breakyourgoal.goallist.ItemListActivity" />
         </activity>
 
         <provider
             android:authorities="com.moodi.breakyourgoal.provider"
-            android:name=".GoalContentProvider"
+            android:name=".contentprovider.GoalContentProvider"
             android:exported="false"/>
     </application>
 

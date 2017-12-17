@@ -9,7 +9,7 @@
     android:divider="?android:attr/dividerHorizontal"
     android:orientation="horizontal"
     android:showDividers="middle"
-    tools:context="com.moodi.breakyourgoal.ItemListActivity">
+    tools:context="com.moodi.breakyourgoal.goallist.ItemListActivity">
 
     <!--
     This layout is a two-pane layout for the Items
@@ -26,7 +26,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         app:layoutManager="LinearLayoutManager"
-        tools:context="com.moodi.breakyourgoal.ItemListActivity"
+        tools:context="com.moodi.breakyourgoal.goallist.ItemListActivity"
         tools:listitem="@layout/item_list_content"
         android:clickable="true"
         android:focusable="true"

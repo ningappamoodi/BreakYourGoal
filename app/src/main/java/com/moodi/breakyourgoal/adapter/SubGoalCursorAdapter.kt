@@ -1,4 +1,4 @@
-package com.moodi.breakyourgoal
+package com.moodi.breakyourgoal.adapter
 
 
 import android.content.ContentValues
@@ -13,11 +13,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import kotlinx.android.synthetic.main.fragment_add_goal.*
-import android.support.design.widget.CoordinatorLayout.Behavior.setTag
 import android.support.v4.content.ContextCompat
-import android.support.v4.text.TextUtilsCompat
 import android.text.TextUtils
+import com.moodi.breakyourgoal.R
+import com.moodi.breakyourgoal.common.GoalsConstant
+import com.moodi.breakyourgoal.goallist.ItemListActivity
 
 
 /**
@@ -144,10 +144,10 @@ class SubGoalCursorAdapter: CursorRecyclerViewAdapter<SubGoalCursorAdapter.ViewH
                            var color: Int? = null
                            when(statusArray.get(selected)) {
 
-                               GoalsConstant.OPEN ->        color = ContextCompat.getColor(context,  R.color.colorGrey)
-                               GoalsConstant.POSTPONED ->   color = ContextCompat.getColor(context,  R.color.colorRed)
-                               GoalsConstant.IN_PROGRESS -> color = ContextCompat.getColor(context,  R.color.colorOrange)
-                               GoalsConstant.COMPLETED ->   color = ContextCompat.getColor(context,  R.color.colorGreen)
+                               GoalsConstant.OPEN ->        color = ContextCompat.getColor(context, R.color.colorGrey)
+                               GoalsConstant.POSTPONED ->   color = ContextCompat.getColor(context, R.color.colorRed)
+                               GoalsConstant.IN_PROGRESS -> color = ContextCompat.getColor(context, R.color.colorOrange)
+                               GoalsConstant.COMPLETED ->   color = ContextCompat.getColor(context, R.color.colorGreen)
                            }
 
                            if(color != null) {
@@ -190,9 +190,9 @@ class SubGoalCursorAdapter: CursorRecyclerViewAdapter<SubGoalCursorAdapter.ViewH
                            Log.d("GOAL", "SubGoalCursorAdapter reload item list: "
                                    +  activity)
                            activity?.loaderManager?.restartLoader(GoalsConstant.SUBGOAL, null,
-                                   activity)
+                                   activity!!.presenter!!.getLoader())
                            activity?.loaderManager?.restartLoader(GoalsConstant.GOAL, null,
-                                   activity)
+                                   activity!!.presenter!!.getLoader())
 
                        }
                    }

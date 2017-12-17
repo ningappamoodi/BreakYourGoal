@@ -7,7 +7,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:background="#f0f0f0"
     android:fillViewport="true"
-    tools:context=".AddGoalActivity">
+    tools:context=".addgoal.AddGoalActivity">
 
 <RelativeLayout
     android:layout_width="match_parent"

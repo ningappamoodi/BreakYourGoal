@@ -1,19 +1,9 @@
-package com.moodi.breakyourgoal
+package com.moodi.breakyourgoal.goaldetail
 
-import android.app.ActionBar
-import android.content.Context
-import android.content.DialogInterface
 import android.content.res.Configuration
-import android.content.res.Resources
 import android.database.Cursor
-import android.database.MatrixCursor
-import android.database.MergeCursor
-import android.graphics.Color
-import android.net.Uri
 
-import android.support.design.widget.CollapsingToolbarLayout
 import android.os.Bundle
-import android.preference.MultiSelectListPreference
 import android.support.v4.app.Fragment
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.Loader
@@ -22,14 +12,16 @@ import android.view.View
 import android.view.ViewGroup
 
 import android.support.v4.content.CursorLoader
-import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
-import android.util.TypedValue
-import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import com.moodi.breakyourgoal.R
+import com.moodi.breakyourgoal.adapter.SubGoalCursorAdapter
+import com.moodi.breakyourgoal.dialogfragment.SubGoalDialogFragment
+import com.moodi.breakyourgoal.common.GoalsConstant
+import com.moodi.breakyourgoal.goallist.ItemListActivity
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 

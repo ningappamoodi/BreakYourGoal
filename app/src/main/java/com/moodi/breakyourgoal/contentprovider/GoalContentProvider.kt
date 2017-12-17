@@ -1,4 +1,4 @@
-package com.moodi.breakyourgoal
+package com.moodi.breakyourgoal.contentprovider
 
 import android.content.ContentProvider
 import android.content.ContentValues
@@ -10,6 +10,8 @@ import android.database.sqlite.SQLiteDatabase
 import android.content.ContentUris
 import android.database.SQLException
 import android.util.Log
+import com.moodi.breakyourgoal.db.GoalDatabaseHelper
+import com.moodi.breakyourgoal.common.GoalsConstant
 
 
 /**

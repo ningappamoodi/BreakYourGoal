@@ -1,4 +1,4 @@
-package com.moodi.breakyourgoal
+package com.moodi.breakyourgoal.dialogfragment
 
 import android.app.DatePickerDialog
 import android.app.Dialog
