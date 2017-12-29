@@ -42,6 +42,12 @@ class ItemListActivity : AppCompatActivity(),
         presenter?.loaddata()
     }
 
+    override fun onResume() {
+
+        presenter?.restartLoader()
+        super.onResume()
+    }
+
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
 

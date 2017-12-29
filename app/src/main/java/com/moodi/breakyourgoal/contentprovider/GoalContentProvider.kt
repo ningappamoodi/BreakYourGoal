@@ -77,7 +77,7 @@ class GoalContentProvider : ContentProvider() {
 
         Log.d("GOAL", "In Goal Content provider Query method: Count : " + c.count)
 
-        return c;
+        return c
     }
 
     override fun onCreate(): Boolean {

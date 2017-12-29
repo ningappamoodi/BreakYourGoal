@@ -2,6 +2,7 @@ package com.moodi.breakyourgoal.adapter
 
 
 import android.content.Context
+import android.content.Intent
 import android.database.Cursor
 import android.graphics.Color
 import android.support.v4.content.ContextCompat
@@ -14,8 +15,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.moodi.breakyourgoal.R
 import com.moodi.breakyourgoal.common.GoalsConstant
+import com.moodi.breakyourgoal.goaldetail.ItemDetailActivity
 import com.moodi.breakyourgoal.goallist.ItemListActivity
 import com.moodi.breakyourgoal.util.GoalActivityUtil
+import kotlinx.android.synthetic.main.item_detail.view.*
 import kotlinx.android.synthetic.main.item_list_content.view.*
 
 /**
@@ -41,14 +44,18 @@ class MyListCursorAdapter : CursorRecyclerViewAdapter<MyListCursorAdapter.ViewHo
         this.cursor1 = cursor
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnLongClickListener {
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+       /* override fun onClick(p0: View?) {
+
+
+        }*/
 
         val view: View = view
 
-        override fun onLongClick(p0: View?): Boolean {
+       /* override fun onLongClick(p0: View?): Boolean {
 
             return true
-        }
+        }*/
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
@@ -147,6 +154,13 @@ class MyListCursorAdapter : CursorRecyclerViewAdapter<MyListCursorAdapter.ViewHo
        viewHolder.view.setOnClickListener(object : View.OnClickListener {
 
            override fun onClick(p0: View?) {
+
+
+               Log.i("GOAL", "Inside onCLick!!")
+               val intent = Intent(context, ItemDetailActivity::class.java)
+               val goalId = p0?.list_item_goalId?.text
+               intent.putExtra("GoalId", goalId)
+               context?.startActivity(intent)
 
            }
        })

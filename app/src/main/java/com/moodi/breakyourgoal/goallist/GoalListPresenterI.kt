@@ -14,6 +14,7 @@ interface GoalListPresenterI {
     fun setupRecyclerView(recyclerView: RecyclerView)
     fun getRecyclerAdapter() : MyListCursorAdapter
     fun loaddata()
+    fun restartLoader()
     fun removeDetailedFragment(newConfig: Configuration?)
     fun removeDetailedFragment()
     fun getLoader(): GoalListLoader

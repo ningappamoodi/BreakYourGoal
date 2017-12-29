@@ -205,6 +205,14 @@ class GoalListPresenterImpl : GoalListPresenterI {
 
     }
 
+    override fun restartLoader() {
+
+        activity!!.loaderManager.restartLoader(GoalsConstant.SUBGOAL, null, loader)
+        activity!!.loaderManager.restartLoader(GoalsConstant.GOAL, null, loader)
+
+
+    }
+
     override fun removeDetailedFragment(newConfig: Configuration?) {
 
         if (newConfig?.orientation == Configuration.ORIENTATION_PORTRAIT) {
