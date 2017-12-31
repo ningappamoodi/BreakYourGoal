@@ -7,9 +7,15 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.Menu
+import android.view.MenuItem
 import com.moodi.breakyourgoal.R
+import com.moodi.breakyourgoal.common.GoalsConstant
 import kotlinx.android.synthetic.main.activity_item_list.*
 import kotlinx.android.synthetic.main.item_list.*
+import android.support.v4.view.ViewCompat.setAlpha
+import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
+import android.support.v4.content.ContextCompat
 
 
 /**
@@ -48,6 +54,13 @@ class ItemListActivity : AppCompatActivity(),
         super.onResume()
     }
 
+    override fun onPause() {
+
+        presenter?.isLongClick(false)
+        presenter?.getRecyclerAdapter()?.clearData()
+        super.onPause()
+    }
+
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
 
@@ -84,7 +97,10 @@ class ItemListActivity : AppCompatActivity(),
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
 
+
         menuInflater.inflate(R.menu.menu_home, menu)
+
+
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -92,9 +108,40 @@ class ItemListActivity : AppCompatActivity(),
 
         val item = menu?.findItem(R.id.action_delete)
 
-       if(presenter!!.getIsLongClick()) {
+        val color = ContextCompat.getColor(this, android.R.color.white)
+
+        val drawable = item?.getIcon()
+        if (drawable != null) {
+            // If we don't mutate the drawable, then all drawable's with this id will have a color
+            // filter applied to it.
+            drawable!!.mutate()
+            drawable!!.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
+            drawable!!.setAlpha(255)
+        }
+
+       if(presenter!!.getIsLongClick())
            item?.setVisible(true)
-       }
+        else
+           item?.setVisible(false)
+
         return super.onPrepareOptionsMenu(menu)
     }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+
+        when(item?.itemId) {
+
+            R.id.action_delete ->
+                presenter?.deleteGoals()
+
+
+
+
+            else ->  false
+
+        }
+
+        return false
+    }
+
 }

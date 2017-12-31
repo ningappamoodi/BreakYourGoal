@@ -20,4 +20,5 @@ interface GoalListPresenterI {
     fun getLoader(): GoalListLoader
     fun isLongClick(isLongClick: Boolean)
     fun getIsLongClick() : Boolean
+    fun  deleteGoals()
 }

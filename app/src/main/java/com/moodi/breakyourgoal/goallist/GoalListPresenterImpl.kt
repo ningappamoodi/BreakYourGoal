@@ -245,4 +245,33 @@ class GoalListPresenterImpl : GoalListPresenterI {
         return isLongClicked
     }
 
+    fun resetOpionMenu() {
+
+        isLongClick(false)
+        activity?.invalidateOptionsMenu()
+
+    }
+
+
+    override fun deleteGoals() {
+
+        val cursor = getRecyclerAdapter().cursor!!
+        val selectedIds: ArrayList<String>  = ArrayList<String>()
+       for(item in  getRecyclerAdapter()
+               .selectedPositions) {
+
+
+           cursor.moveToPosition(item)
+
+           val _id = cursor.getInt(cursor.getColumnIndex("_id"))
+
+           selectedIds.add(_id.toString())
+       }
+        val deletedId = activity?.contentResolver?.delete(GoalsConstant.GOAL_LIST_CONTENT_URI,
+                "_ID=?", selectedIds.toTypedArray())
+
+        resetOpionMenu()
+        restartLoader()
+    }
+
 }

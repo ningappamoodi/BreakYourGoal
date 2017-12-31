@@ -9,6 +9,7 @@
     app:cardElevation="4dp"
     app:cardCornerRadius="8dp"
     android:id="@+id/list_item_row"
+    android:background="?attr/selectableItemBackground"
 
     >
 

@@ -43,18 +43,18 @@
   </style>
 
   <style name="AppTheme.ToolbarStyle" parent="Base.Theme.AppCompat.Light.DarkActionBar">
-      <item name="android:background">@color/colorPurpleDark</item>
-      <item name="titleTextColor">@android:color/white</item>
-      <item name="titleTextAppearance">@style/TextAppearance.AppCompat.Widget.ActionBar.Title</item>
+        <item name="android:background">@color/colorPurpleDark</item>
+       <item name="titleTextColor">@android:color/white</item>
+       <item name="titleTextAppearance">@style/TextAppearance.AppCompat.Widget.ActionBar.Title</item>
 
-  </style>
+   </style>
 
-  <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+   <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-  <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+   <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-  <style name="AppTheme.NoActionBar.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+   <style name="AppTheme.NoActionBar.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-  <style name="AppTheme.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+   <style name="AppTheme.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-</resources>
+ </resources>
