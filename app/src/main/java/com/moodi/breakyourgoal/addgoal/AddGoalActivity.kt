@@ -23,7 +23,7 @@ class AddGoalActivity : AppCompatActivity() {
 
         Log.i("GOAL", "########## AddGoalActivity: onCreate");
 
-        if (GoalActivityUtil.isLargeScreenAndLandscape(resources)) {
+        if (GoalActivityUtil.isLargeScreenAndLandscape(this)) {
 
             val sharedPref = getSharedPreferences("GOALS", MODE_PRIVATE)
             val editor = sharedPref.edit()

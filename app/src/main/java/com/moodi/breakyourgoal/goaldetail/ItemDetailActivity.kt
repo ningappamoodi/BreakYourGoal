@@ -77,7 +77,7 @@ class ItemDetailActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayShowHomeEnabled(true)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        if (GoalActivityUtil.isLargeScreenAndLandscape(resources)) {
+        if (GoalActivityUtil.isLargeScreenAndLandscape(this)) {
 
             val sharedPref = getSharedPreferences("GOALS", MODE_PRIVATE)
             val editor = sharedPref.edit()

@@ -1,5 +1,6 @@
 package com.moodi.breakyourgoal.goallist
 
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
@@ -32,10 +33,14 @@ class GoalListPresenterImpl : GoalListPresenterI {
 
     var isLongClicked = false
 
+    val context: Context
+
     constructor(listView: GoalListViewI) {
         this.listView = listView
         activity = listView as AppCompatActivity
         loader = GoalListLoader(this, activity!!)
+
+        context = activity as Context
     }
 
     override fun addFragment() {
@@ -98,7 +103,7 @@ class GoalListPresenterImpl : GoalListPresenterI {
 
         Log.d("GOAL", " In Home Activity fab.setOnClickListener  : ")
 
-        if (GoalActivityUtil.isLargeScreenAndLandscape(activity!!.resources)) {
+        if (GoalActivityUtil.isLargeScreenAndLandscape(context)) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             val arguments = Bundle()

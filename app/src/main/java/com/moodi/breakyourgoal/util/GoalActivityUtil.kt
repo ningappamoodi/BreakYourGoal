@@ -1,5 +1,6 @@
 package com.moodi.breakyourgoal.util
 
+import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
 
@@ -11,7 +12,11 @@ class GoalActivityUtil {
     companion object {
 
 
-        public fun isLargeScreenAndLandscape(resources: Resources): Boolean {
+         fun isLargeScreenAndLandscape(context: Context): Boolean {
+
+            val resources:Resources = context!!.resources
+
+             return true
 
             if ((resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
                     == Configuration.SCREENLAYOUT_SIZE_XLARGE &&

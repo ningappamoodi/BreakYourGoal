@@ -1,11 +1,10 @@
-<android.support.v4.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/item_detail"
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-android:background="@color/colorPurple_50"
-   >
+    android:background="@color/colorPurple_50">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -68,7 +67,7 @@ android:background="@color/colorPurple_50"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/item_detail_frame_2"
-
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
         />
 
         <Button android:id="@+id/item_detail_add_sub_goal"

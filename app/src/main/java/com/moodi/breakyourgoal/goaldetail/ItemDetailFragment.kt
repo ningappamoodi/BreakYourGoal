@@ -22,7 +22,10 @@ import com.moodi.breakyourgoal.adapter.SubGoalCursorAdapter
 import com.moodi.breakyourgoal.dialogfragment.SubGoalDialogFragment
 import com.moodi.breakyourgoal.common.GoalsConstant
 import com.moodi.breakyourgoal.goallist.ItemListActivity
+import com.moodi.breakyourgoal.util.GoalActivityUtil
+import kotlinx.android.synthetic.main.goal_detail_frame1.view.*
 import kotlinx.android.synthetic.main.item_detail.*
+import kotlinx.android.synthetic.main.item_detail.view.*
 import kotlinx.android.synthetic.main.item_detail_frame.*
 import kotlinx.android.synthetic.main.item_detail_frame.view.*
 import java.text.DateFormat
@@ -98,15 +101,12 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        initLoader()
-
        /* val cursor = activity.contentResolver.query(GoalsConstant.GOAL_LIST_CONTENT_URI,
                 arrayOf("max(_id)"), null, null, null)
 
         cursor.moveToFirst()*/
 
         getGoalId()
-
         saveGoalId()
 
         //Log.d("GOAL", "onActivityCreated goalId: " + goalId)
@@ -120,6 +120,7 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
         //val subGoalDialogFragment = SubGoalDialogFragment()*/
 
+        initLoader()
         addSubGoal()
     }
 
@@ -150,19 +151,14 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
     }
 
     private fun getGoalId() {
-        if ((resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
-                == Configuration.SCREENLAYOUT_SIZE_XLARGE &&
-                resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) ||
-                (resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
-                        == Configuration.SCREENLAYOUT_SIZE_LARGE &&
-                        resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)) {
+        goalId = if (GoalActivityUtil.isLargeScreenAndLandscape(activity)) {
 
             val fragmentItemDetail = fragmentManager.findFragmentById(R.id.item_detail_container)
                     as ItemDetailFragment
-            goalId = fragmentItemDetail.goalId
+            fragmentItemDetail.goalId
         } else {
 
-            goalId = activity.intent.getStringExtra("GoalId")
+            activity.intent.getStringExtra("GoalId")
         }
 
         Log.d("GOAL", "ItemDetailFragment getGoalId: goalId: "
@@ -176,14 +172,14 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
         rootView.item_detail_include.visibility = View.INVISIBLE
 
-        idGoalTitle =  rootView.findViewById(R.id.goal_detail_title)
-        subGoalCount =       rootView.findViewById(R.id.item_detail_subgoal_count)
-        itemDetailGoalFromDate = rootView.findViewById(R.id.item_detail_goal_from_date)
-        itemDetailGoalToDate = rootView.findViewById(R.id.item_detail_goal_to_date)
-        itemDetailCategory = rootView.findViewById(R.id.item_detail_category)
-        itemDetailDuration = rootView.findViewById(R.id.item_detail_duration)
+        idGoalTitle =  rootView.goal_detail_title
+        subGoalCount =       rootView.item_detail_subgoal_count
+        itemDetailGoalFromDate = rootView.item_detail_goal_from_date
+        itemDetailGoalToDate = rootView.item_detail_goal_to_date
+        itemDetailCategory = rootView.item_detail_category
+        itemDetailDuration = rootView.item_detail_duration
 
-            subGoalList = rootView.findViewById<RecyclerView>(R.id.item_detail_list)
+            subGoalList = rootView.item_detail_list
             subGoalList?.setLayoutManager( LinearLayoutManager(context))
 
         return rootView
@@ -274,7 +270,7 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
         subGoalList?.adapter = recyclerAdapter
 
-        subGoalList?.setLayoutManager(LinearLayoutManager(context));
+        subGoalList?.layoutManager = LinearLayoutManager(context)
 
     }
 

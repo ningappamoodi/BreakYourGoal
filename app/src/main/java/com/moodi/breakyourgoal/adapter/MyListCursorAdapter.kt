@@ -106,7 +106,7 @@ class MyListCursorAdapter : CursorRecyclerViewAdapter<MyListCursorAdapter.ViewHo
     }
 
     private fun largeScreenSetup(position: Int, card: CardView, viewHolder: ViewHolder) {
-        if (GoalActivityUtil.isLargeScreenAndLandscape(context!!.resources)) {
+        if (GoalActivityUtil.isLargeScreenAndLandscape(context!!)) {
 
             setBackGroundColor(position, card, viewHolder)
         }
@@ -196,8 +196,7 @@ class MyListCursorAdapter : CursorRecyclerViewAdapter<MyListCursorAdapter.ViewHo
             }
 
             private fun onListItemClick(p0: View?) {
-                if (GoalActivityUtil.isLargeScreenAndLandscape(
-                        (context as ItemListActivity)!!.resources)) {
+                if (GoalActivityUtil.isLargeScreenAndLandscape(context!!)) {
                     addFragment(p0)
 
                 } else {
@@ -221,8 +220,10 @@ class MyListCursorAdapter : CursorRecyclerViewAdapter<MyListCursorAdapter.ViewHo
         // using a fragment transaction.
         val arguments = Bundle()
 
-        arguments.putString("GoalId", p0!!.list_item_goalId.text.toString())
-        arguments.putString("goalName", p0!!.list_item_goal_name.text.toString())
+        val goalId = p0!!.list_item_goalId.text.toString()
+        arguments.putString("GoalId", goalId)
+        val goalName = p0!!.list_item_goal_name.text.toString()
+        arguments.putString("goalName", goalName)
 
         val fragment = ItemDetailFragment()
         fragment.arguments = arguments
@@ -275,7 +276,7 @@ class MyListCursorAdapter : CursorRecyclerViewAdapter<MyListCursorAdapter.ViewHo
         })
     }
 
-    public fun clearData() {
+     fun clearData() {
 
         selectedPositions.clear()
     }
