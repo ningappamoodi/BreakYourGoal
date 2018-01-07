@@ -13,4 +13,6 @@ interface AddGoalViewI {
     fun saveSubGoalBtnClickListener()
     fun setCategoryAdapter(arrayAdapter: ArrayAdapter<CharSequence>)
     fun setDurationAdapter(arrayAdapter: ArrayAdapter<CharSequence>)
+    fun durationBtnClickListener()
+
 }

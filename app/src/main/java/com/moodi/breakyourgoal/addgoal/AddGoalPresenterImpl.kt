@@ -1,7 +1,5 @@
 package com.moodi.breakyourgoal.addgoal
 
-import android.app.Activity
-import android.app.LoaderManager
 import android.content.ContentValues
 import android.content.Intent
 import android.database.Cursor
@@ -18,7 +16,8 @@ import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import com.moodi.breakyourgoal.*
+import com.moodi.breakyourgoal.GoalApplication
+import com.moodi.breakyourgoal.R
 import com.moodi.breakyourgoal.adapter.SubGoalCursorAdapter
 import com.moodi.breakyourgoal.common.GoalsConstant
 import com.moodi.breakyourgoal.dialogfragment.SubGoalDialogFragment
@@ -32,17 +31,17 @@ import javax.inject.Inject
  */
 class AddGoalPresenterImpl: AddGoalPresenterI {
 
-    var subGoalDialogFragment: SubGoalDialogFragment?  = null
+    private var subGoalDialogFragment: SubGoalDialogFragment?  = null
 
-    var extendedCursor: MergeCursor? = null
+    private var extendedCursor: MergeCursor? = null
 
-    var recyclerAdapter : SubGoalCursorAdapter? = null
+    private var recyclerAdapter : SubGoalCursorAdapter? = null
 
-    var addGoalViewI: AddGoalViewI? = null
-    var fragment: Fragment? = null
+    private var addGoalViewI: AddGoalViewI? = null
+    private var fragment: Fragment? = null
 
     @Inject
-  public lateinit var addGoal: AddGoalImpl
+    lateinit var addGoal: AddGoalImpl
 
     constructor(addGoalViewI: AddGoalViewI) {
 
@@ -58,38 +57,66 @@ class AddGoalPresenterImpl: AddGoalPresenterI {
 
         Log.d("GOAL", "In saveGoal")
 
-        val projection = arrayOf("_id", "SubGoalName", "GoalId", "Status", "TargetDate")
+        if (validateForm()) return
 
+        val uri: Uri = saveGoal()
+        updatePref(uri)
+        updateGoals(uri)
+        updateScreen(uri)
+    }
+
+    private fun updateScreen(uri: Uri) {
+        if (fragment!!.activity is ItemListActivity) {
+
+            restartLoader(uri)
+            replaceFragment(uri)
+
+        } else {
+            startItemListActivity()
+        }
+    }
+
+    private fun startItemListActivity() {
+        val intent = Intent(fragment!!.activity, ItemListActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+        fragment!!.startActivity(intent)
+    }
+
+    private fun replaceFragment(uri: Uri) {
+        Log.d("GOAL", "Add Goal Fragment : inserted row : " + uri.lastPathSegment)
+        val arguments = Bundle()
+        arguments.putString("GoalId", uri.lastPathSegment)
+        val fragment = ItemDetailFragment()
+        fragment.arguments = arguments
+
+        (addGoalViewI as AddGoalFragment).activity.supportFragmentManager
+        //fragment!!.fragmentManager.beginTransaction()
+                .beginTransaction()
+                .replace(R.id.item_detail_container, fragment)
+                .commit()
+    }
+
+    private fun restartLoader(uri: Uri) {
+        (fragment!!.activity as ItemListActivity).presenter!!.getRecyclerAdapter().newDataPosition = uri.lastPathSegment.toInt()
+        val loader = (fragment!!.activity as ItemListActivity).presenter?.getLoader()
+        fragment!!.activity.loaderManager.restartLoader(
+                GoalsConstant.GOAL,
+                null,
+                loader
+        )
+    }
+
+    private fun validateForm(): Boolean {
         if (!validateFormFileds()) {
 
             Toast.makeText(fragment!!.activity, "Form fields can't be empty!", Toast.LENGTH_LONG).show()
-            return
+            return true
         }
+        return false
+    }
 
-        val c = fragment!!.activity.contentResolver.query(GoalsConstant.SUB_GOAL_CONTENT_URI, projection, null,
-                null, null)
-
-        val from = arrayOf("_id", "SubGoalName")
-        val to = intArrayOf(R.id.subgoal_id, R.id.subgoal_item_goal_name)
-
-        val values = ContentValues()
-        values.put("GoalName", fragment!!.add_goal_goal_name.text.toString())
-        values.put("Category", fragment!!.add_goal_category.selectedItem.toString())
-        values.put("Duration", fragment!!.add_goal_duration.selectedItem.toString())
-        values.put("FromDate", fragment!!.add_goal_from_date.text.toString())
-        values.put("ToDate",   fragment!!.add_goal_to_date.text.toString())
-
-        val uri: Uri = fragment!!.activity.contentResolver.insert(GoalsConstant.GOAL_LIST_CONTENT_URI, values)
-
-        Log.d("GOAL", "uri.lastPathSegment : " + uri.lastPathSegment)
-
-        val sharedPref = fragment!!.activity.getSharedPreferences("GOALS", AppCompatActivity.MODE_PRIVATE)
-        val editor = sharedPref.edit()
-        editor.putString("GoalId", uri.lastPathSegment)
-        editor.commit()
-
-
-        if(recyclerAdapter?.extras != null) {
+    private fun updateGoals(uri: Uri) {
+        if (recyclerAdapter?.extras != null) {
             recyclerAdapter?.extras!!.moveToFirst()
 
             while (!recyclerAdapter?.extras!!.isAfterLast) {
@@ -100,9 +127,9 @@ class AddGoalPresenterImpl: AddGoalPresenterI {
                 val values = ContentValues()
 
                 values.put("SubGoalName", recyclerAdapter?.extras!!.getString(1))
-                values.put("GoalId",      uri.lastPathSegment)
-                values.put("Status",      recyclerAdapter?.extras!!.getString(3))
-                values.put("TargetDate",  recyclerAdapter?.extras!!.getString(4))
+                values.put("GoalId", uri.lastPathSegment)
+                values.put("Status", recyclerAdapter?.extras!!.getString(3))
+                values.put("TargetDate", recyclerAdapter?.extras!!.getString(4))
 
                 fragment!!.activity.contentResolver.insert(GoalsConstant.SUB_GOAL_CONTENT_URI, values)
 
@@ -110,28 +137,33 @@ class AddGoalPresenterImpl: AddGoalPresenterI {
                 recyclerAdapter?.extras!!.moveToNext()
             }
         }
+    }
 
-        if(fragment!!.activity is ItemListActivity) {
+    private fun updatePref(uri: Uri) {
+        val sharedPref = fragment!!.activity.getSharedPreferences("GOALS", AppCompatActivity.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        editor.putString("GoalId", uri.lastPathSegment)
+        editor.commit()
+    }
 
-            (fragment!!.activity as ItemListActivity).presenter!!.getRecyclerAdapter().newDataPosition = uri.lastPathSegment.toInt()
-            fragment!!.activity.loaderManager.restartLoader(GoalsConstant.GOAL, null,
-                    fragment!!.activity as LoaderManager.LoaderCallbacks<Cursor>)
+    private fun saveGoal(): Uri {
+        /*fragment!!.activity.contentResolver.query(GoalsConstant.SUB_GOAL_CONTENT_URI, projection, null,
+                null, null)*/
 
+        /* arrayOf("_id", "SubGoalName")
+        intArrayOf(R.id.subgoal_id, R.id.subgoal_item_goal_name)*/
 
-            Log.d("GOAL", "Add Goal Fragment : inserted row : " + uri.lastPathSegment)
-            val arguments = Bundle()
-            arguments.putString("GoalId", uri.lastPathSegment)
-            val fragment = ItemDetailFragment()
-            fragment.arguments = arguments
-            fragment!!.fragmentManager.beginTransaction()
-                    .replace(R.id.item_detail_container, fragment)
-                    .commit()
+        val values = ContentValues()
+        values.put("GoalName", fragment!!.add_goal_goal_name.text.toString())
+        values.put("Category", fragment!!.add_goal_category.selectedItem.toString())
+        values.put("Duration", fragment!!.add_goal_duration.selectedItem.toString())
+        values.put("FromDate", fragment!!.add_goal_from_date.text.toString())
+        values.put("ToDate", fragment!!.add_goal_to_date.text.toString())
 
-        } else {
-            val intent = Intent(fragment!!.activity, ItemListActivity::class.java)
-            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
-            fragment!!.startActivity(intent)
-        }
+        val uri: Uri = fragment!!.activity.contentResolver.insert(GoalsConstant.GOAL_LIST_CONTENT_URI, values)
+
+        Log.d("GOAL", "uri.lastPathSegment : " + uri.lastPathSegment)
+        return uri
     }
 
     override fun subgoalAdd(view: View) {
@@ -140,10 +172,7 @@ class AddGoalPresenterImpl: AddGoalPresenterI {
 
         Log.d("GOAL", "subgoalName: " + subGoalDialogFragment!!.subgoalName?.text.toString())
 
-        if(!subGoalDialogFragment!!.validate()) {
-
-            return
-        }
+        if(!subGoalDialogFragment!!.validate()) return
 
         var matrixCursor: MatrixCursor? = null
 
@@ -191,7 +220,7 @@ class AddGoalPresenterImpl: AddGoalPresenterI {
     }
 
 
-    fun  validateFormFileds(): Boolean {
+    private fun  validateFormFileds(): Boolean {
 
         if(TextUtils.isEmpty(fragment!!.add_goal_goal_name.text.toString()) ||
                 TextUtils.isEmpty(fragment!!.add_goal_category.selectedItem.toString()) ||

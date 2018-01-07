@@ -44,8 +44,7 @@ class ItemDetailActivity : AppCompatActivity() {
 
         // Show the Up button in the action bar.
         //val actionBar = supportActionBar
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar!!.setDisplayShowHomeEnabled(true)
+
 
         // savedInstanceState is non-null when there is fragment state
         // saved from previous configurations of this activity
@@ -74,6 +73,9 @@ class ItemDetailActivity : AppCompatActivity() {
             toolbar_layout.title = "Goal details"
             // appBarLayout.setExpandedTitleColor(resources.getColor(R.color.colorAccent, null))
         }
+
+        supportActionBar!!.setDisplayShowHomeEnabled(true)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         if (GoalActivityUtil.isLargeScreenAndLandscape(resources)) {
 

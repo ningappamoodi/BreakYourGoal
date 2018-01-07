@@ -43,7 +43,7 @@
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.moodi.breakyourgoal.goallist.ItemListActivity" />
+                android:value=".goallist.ItemListActivity" />
         </activity>
 
         <provider

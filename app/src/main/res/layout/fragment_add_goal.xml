@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    android:background="#f0f0f0"
+    android:background="@color/colorPurple_50"
     android:fillViewport="true"
     tools:context=".addgoal.AddGoalActivity">
 
@@ -18,11 +18,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="invisible"/>
-    <FrameLayout android:id="@+id/add_goal_frame_1"
+    <android.support.v7.widget.CardView android:id="@+id/add_goal_frame_1"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="#fff"
         android:elevation="4dp"
+        app:cardElevation="4dp"
+        app:cardCornerRadius="12dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="16dp"
@@ -34,85 +36,105 @@
             android:hint="Goal name"
             android:background="#fff"
             />
-    </FrameLayout>
-    <FrameLayout android:id="@+id/add_goal_frame_2"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/add_goal_frame_2"
+        android:layout_width="160dp"
+        android:layout_height="100dp"
+        android:layout_below="@+id/add_goal_frame_1"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="8dp"
         android:background="#fff"
         android:elevation="4dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_below="@+id/add_goal_frame_1">
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp">
+
         <Spinner
             android:id="@+id/add_goal_category"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#fff"
-            />
-    </FrameLayout>
-    <FrameLayout android:id="@+id/add_goal_frame_3"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
+            android:background="@color/colorOrange_FFF1ECE7" />
+    </android.support.v7.widget.CardView>
+    <android.support.v7.widget.CardView android:id="@+id/add_goal_frame_3"
+        android:layout_width="160dp"
+        android:layout_height="100dp"
         android:background="#fff"
         android:elevation="4dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginRight="15dp"
         android:layout_marginBottom="16dp"
         android:layout_marginTop="8dp"
-        android:layout_below="@+id/add_goal_frame_2">
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        android:layout_below="@+id/add_goal_frame_1"
+        android:layout_toRightOf="@+id/add_goal_frame_2">
         <Spinner
             android:id="@+id/add_goal_duration"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#fff"
+            android:background="@color/colorOrange_FFF1ECE7"
             />
-    </FrameLayout>
-    <FrameLayout android:id="@+id/add_goal_frame_4"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
+    </android.support.v7.widget.CardView>
+    <android.support.v7.widget.CardView android:id="@+id/add_goal_frame_4"
+        android:layout_width="160dp"
+        android:layout_height="100dp"
         android:background="#fff"
         android:elevation="4dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:layout_marginBottom="16dp"
         android:layout_marginTop="8dp"
-        android:layout_below="@+id/add_goal_frame_3">
-        <EditText  android:id="@+id/add_goal_from_date"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        android:layout_below="@+id/add_goal_frame_2">
+
+        <EditText
+            android:id="@+id/add_goal_from_date"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:inputType="none"
+            android:background="@color/colorOrange_FFF1ECE7"
             android:focusable="false"
             android:hint="From date"
-            android:background="#fff"/>
-    </FrameLayout>
-    <FrameLayout android:id="@+id/add_goal_frame_5"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
+            android:inputType="none"
+            android:paddingLeft="8dp" />
+    </android.support.v7.widget.CardView>
+    <android.support.v7.widget.CardView android:id="@+id/add_goal_frame_5"
+        android:layout_width="160dp"
+        android:layout_height="100dp"
         android:background="#fff"
         android:elevation="4dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginRight="15dp"
         android:layout_marginBottom="16dp"
         android:layout_marginTop="8dp"
-        android:layout_below="@+id/add_goal_frame_4">
-        <EditText  android:id="@+id/add_goal_to_date"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        android:layout_below="@+id/add_goal_frame_3"
+        android:layout_toRightOf="@+id/add_goal_frame_4">
+
+        <EditText
+            android:id="@+id/add_goal_to_date"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:inputType="none"
+            android:background="@color/colorOrange_FFF1ECE7"
             android:focusable="false"
-            android:hint="To date"
-            android:background="#fff"/>
-    </FrameLayout>
-    <FrameLayout android:id="@+id/add_goal_frame_6"
-        android:layout_width="150dp"
+            android:hint="  To date"
+            android:inputType="none"
+            android:paddingLeft="8dp" />
+    </android.support.v7.widget.CardView>
+    <android.support.v7.widget.CardView android:id="@+id/add_goal_frame_6"
+        android:layout_width="160dp"
         android:layout_height="50dp"
         android:background="@color/colorPrimary"
         android:elevation="4dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
         android:layout_below="@+id/add_goal_frame_5"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
@@ -123,20 +145,23 @@
             android:background="@color/colorPurpleDark"
             android:text="Add sub goal"
             />
-    </FrameLayout>
+    </android.support.v7.widget.CardView>
 
 
-        <android.support.v7.widget.RecyclerView android:id="@+id/add_goal_subgoal_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/add_goal_frame_6"
-            ></android.support.v7.widget.RecyclerView>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/add_goal_subgoal_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/add_goal_frame_6"
+        android:clipToPadding="true"></android.support.v7.widget.RecyclerView>
 
-    <FrameLayout android:id="@+id/add_goal_frame_7"
+    <android.support.v7.widget.CardView android:id="@+id/add_goal_frame_7"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/colorPrimary"
         android:elevation="4dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
@@ -151,7 +176,7 @@
         android:background="@color/colorPurpleDark"
         android:text="Save"
         />
-    </FrameLayout>
+    </android.support.v7.widget.CardView>
 
 </RelativeLayout>
 

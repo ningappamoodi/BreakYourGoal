@@ -22,6 +22,9 @@ import com.moodi.breakyourgoal.adapter.SubGoalCursorAdapter
 import com.moodi.breakyourgoal.dialogfragment.SubGoalDialogFragment
 import com.moodi.breakyourgoal.common.GoalsConstant
 import com.moodi.breakyourgoal.goallist.ItemListActivity
+import kotlinx.android.synthetic.main.item_detail.*
+import kotlinx.android.synthetic.main.item_detail_frame.*
+import kotlinx.android.synthetic.main.item_detail_frame.view.*
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 
@@ -68,7 +71,7 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
             // to load content from a content provider.
            // mItem = DummyContent.ITEM_MAP[arguments.getString(ARG_ITEM_ID)]
 
-        if ((resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
+        /*if ((resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
                 == Configuration.SCREENLAYOUT_SIZE_XLARGE &&
                 resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) ||
                 (resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
@@ -87,7 +90,7 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
            // val activity = this.activity
 
-        }
+        }*/
 
 
     }
@@ -95,11 +98,58 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val cursor = activity.contentResolver.query(GoalsConstant.GOAL_LIST_CONTENT_URI,
+        initLoader()
+
+       /* val cursor = activity.contentResolver.query(GoalsConstant.GOAL_LIST_CONTENT_URI,
                 arrayOf("max(_id)"), null, null, null)
 
-        cursor.moveToFirst()
+        cursor.moveToFirst()*/
 
+        getGoalId()
+
+        saveGoalId()
+
+        //Log.d("GOAL", "onActivityCreated goalId: " + goalId)
+
+       /* val addSubGoalBtn = activity.findViewById<Button>(R.id.item_detail_add_sub_goal)
+        //val subGoalDatePicker = activity.findViewById<EditText>(R.id.subgoal_date)
+
+        if (addSubGoalBtn == null) {
+            Log.d("GOAL", "addSubGoalBtn: " + addSubGoalBtn)
+        }
+
+        //val subGoalDialogFragment = SubGoalDialogFragment()*/
+
+        addSubGoal()
+    }
+
+    private fun addSubGoal() {
+        item_detail_add_sub_goal.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(p0: View?) {
+                subGoalDialogFragment.show(fragmentManager, "subGoalDialogFragment")
+            }
+        })
+    }
+
+    private fun initLoader() {
+        loaderManager.initLoader(GoalsConstant.GOAL, null, this)
+        loaderManager.initLoader(GoalsConstant.SUBGOAL, null, this)
+    }
+
+    private fun saveGoalId() {
+        if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+
+            val sharedPref = activity.getSharedPreferences("GOALS",
+                    AppCompatActivity.MODE_PRIVATE)
+            val editor = sharedPref.edit()
+            editor.putString("GoalId", goalId)
+            editor.commit()
+            Log.d("GOAL", "goalId for landscape from shared prefs : "
+                    + sharedPref.getString("GoalId", null))
+        }
+    }
+
+    private fun getGoalId() {
         if ((resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
                 == Configuration.SCREENLAYOUT_SIZE_XLARGE &&
                 resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) ||
@@ -115,47 +165,16 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
             goalId = activity.intent.getStringExtra("GoalId")
         }
 
-        Log.d("GOAL", "ItemDetailFragment onActivityCreated goalId: "
+        Log.d("GOAL", "ItemDetailFragment getGoalId: goalId: "
                 + goalId)
         Log.d("GOAL", "Orientation : " + resources.configuration.orientation)
-
-        if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-
-            val sharedPref = activity.getSharedPreferences("GOALS", AppCompatActivity.MODE_PRIVATE)
-            val editor = sharedPref.edit()
-            editor.putString("GoalId", goalId)
-            editor.commit()
-            Log.d("GOAL", "goalId for landscape from shared prefs : "
-                    + sharedPref.getString("GoalId", null))
-        }
-
-        Log.d("GOAL", "onActivityCreated goalId: " + goalId)
-
-        val addSubGoalBtn = activity.findViewById<Button>(R.id.item_detail_add_sub_goal)
-        //val subGoalDatePicker = activity.findViewById<EditText>(R.id.subgoal_date)
-
-        if (addSubGoalBtn == null) {
-            Log.d("GOAL", "addSubGoalBtn: " + addSubGoalBtn)
-        }
-
-        //val subGoalDialogFragment = SubGoalDialogFragment()
-
-
-        addSubGoalBtn?.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(p0: View?) {
-                subGoalDialogFragment.show(fragmentManager, "subGoalDialogFragment")
-            }
-        })
-
-
-
-        loaderManager.initLoader( GoalsConstant.GOAL, null, this)
-        loaderManager.initLoader( GoalsConstant.SUBGOAL, null, this)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val rootView = inflater!!.inflate(R.layout.item_detail, container, false)
+        val rootView = inflater!!.inflate(R.layout.item_detail_frame, container, false)
+
+        rootView.item_detail_include.visibility = View.INVISIBLE
 
         idGoalTitle =  rootView.findViewById(R.id.goal_detail_title)
         subGoalCount =       rootView.findViewById(R.id.item_detail_subgoal_count)
@@ -171,11 +190,6 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
     }
 
 
-    override fun onDetach() {
-        super.onDetach()
-
-
-    }
     override fun onLoaderReset(loader: Loader<Cursor>?) {
 
          val cursorLoader = loader as CursorLoader
@@ -202,6 +216,9 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
                 itemDetailCategory?.text = data?.getString(2)
                 itemDetailDuration?.text = data?.getString(3)
+
+                item_detail_include.visibility = View.VISIBLE
+                item_detail_progressBar.visibility = View.INVISIBLE
             }
 
             GoalsConstant.SUBGOAL -> {

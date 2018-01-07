@@ -29,7 +29,7 @@ import android.support.v4.content.ContextCompat
 class ItemListActivity : AppCompatActivity(),
         GoalListViewI {
 
-     var presenter: GoalListPresenterI? = null
+    var presenter: GoalListPresenterI? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -133,9 +133,6 @@ class ItemListActivity : AppCompatActivity(),
 
             R.id.action_delete ->
                 presenter?.deleteGoals()
-
-
-
 
             else ->  false
 

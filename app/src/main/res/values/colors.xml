@@ -8,6 +8,10 @@
     <color name="colorOrange">#FF8000</color>
     <color name="colorGreen">#33cc33</color>
     <color name="colorPurple">#9575CD</color>
-    <color name="colorPurpleDark">#673AB7</color>
-    <color name="colorPurple_50">#EDE7F6</color>
+    <color name="colorPurpleDark">#673ab7</color>
+    <color name="colorPurple_50">#eee8f6</color>
+    <color name="colorPurple_FF190830">#190830</color>
+    <color name="colorOrange_FFF1D2B4">#f1d2b4</color>
+    <color name="colorOrange_FFEEDCCB">#f1ece7</color>
+    <color name="colorOrange_FFF1ECE7">#f1ece7</color>
 </resources>

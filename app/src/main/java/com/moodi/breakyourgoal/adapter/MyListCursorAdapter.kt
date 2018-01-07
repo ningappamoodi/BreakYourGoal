@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.graphics.Color
+import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
@@ -16,6 +17,7 @@ import android.view.ViewGroup
 import com.moodi.breakyourgoal.R
 import com.moodi.breakyourgoal.common.GoalsConstant
 import com.moodi.breakyourgoal.goaldetail.ItemDetailActivity
+import com.moodi.breakyourgoal.goaldetail.ItemDetailFragment
 import com.moodi.breakyourgoal.goallist.ItemListActivity
 import com.moodi.breakyourgoal.util.GoalActivityUtil
 import kotlinx.android.synthetic.main.item_detail.view.*
@@ -183,23 +185,51 @@ class MyListCursorAdapter : CursorRecyclerViewAdapter<MyListCursorAdapter.ViewHo
         }
     }
 
-    fun  setOnClickListener(viewHolder: ViewHolder) {
+    private fun  setOnClickListener(viewHolder: ViewHolder) {
 
         viewHolder.view.setOnClickListener(object : View.OnClickListener {
 
             override fun onClick(p0: View?) {
 
+                onListItemClick(p0)
 
-                Log.i("GOAL", "Inside onCLick!!")
-                val intent = Intent(context, ItemDetailActivity::class.java)
-                val goalId = p0?.list_item_goalId?.text
-                intent.putExtra("GoalId", goalId)
-                context?.startActivity(intent)
+            }
 
+            private fun onListItemClick(p0: View?) {
+                if (GoalActivityUtil.isLargeScreenAndLandscape(
+                        (context as ItemListActivity)!!.resources)) {
+                    addFragment(p0)
+
+                } else {
+
+                    callActivity(p0)
+                }
             }
         })
     }
 
+    private fun callActivity(p0: View?) {
+        Log.i("GOAL", "Inside onCLick!!")
+        val intent = Intent(context, ItemDetailActivity::class.java)
+        val goalId = p0?.list_item_goalId?.text
+        intent.putExtra("GoalId", goalId)
+        context?.startActivity(intent)
+    }
+
+    private fun addFragment(p0: View?) {
+        // Create the detail fragment and add it to the activity
+        // using a fragment transaction.
+        val arguments = Bundle()
+
+        arguments.putString("GoalId", p0!!.list_item_goalId.text.toString())
+        arguments.putString("goalName", p0!!.list_item_goal_name.text.toString())
+
+        val fragment = ItemDetailFragment()
+        fragment.arguments = arguments
+        (context as ItemListActivity)!!.supportFragmentManager.beginTransaction()
+                .replace(R.id.item_detail_container, fragment)
+                .commit()
+    }
 
 
     private fun setOnLongClickListener(viewHolder: ViewHolder, position: Int) {

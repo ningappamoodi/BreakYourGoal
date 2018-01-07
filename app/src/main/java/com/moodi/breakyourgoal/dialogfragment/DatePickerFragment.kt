@@ -22,7 +22,7 @@ class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener 
         val c = Calendar.getInstance()
         val year = c.get(Calendar.YEAR)
         val month = c.get(Calendar.MONTH)
-        val day = c.get(Calendar.DAY_OF_MONTH)
+        val day = c.get(Calendar.DATE)
 
         // Create a new instance of DatePickerDialog and return it
         return DatePickerDialog(activity, this, year, month, day)
@@ -30,7 +30,7 @@ class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener 
 
     override fun onDateSet(datePicker: DatePicker, i: Int, i1: Int, i2: Int) {
 
-        editText?.setText(i2.toString() + "/" + i1.toString() + "/" + i.toString())
+        editText?.setText(i2.toString() + "/" + (i1 + 1).toString() + "/" + i.toString())
 
     }
 

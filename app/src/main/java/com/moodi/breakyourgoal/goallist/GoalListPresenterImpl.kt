@@ -31,7 +31,6 @@ class GoalListPresenterImpl : GoalListPresenterI {
     private  var recyclerAdapter : MyListCursorAdapter? = null
 
     var isLongClicked = false
-        get() = field
 
     constructor(listView: GoalListViewI) {
         this.listView = listView
@@ -41,13 +40,17 @@ class GoalListPresenterImpl : GoalListPresenterI {
 
     override fun addFragment() {
 
-        val sharedPref = activity!!.getSharedPreferences("GOALS", AppCompatActivity.MODE_PRIVATE)
+        val sharedPref = activity!!.getSharedPreferences("GOALS",
+                AppCompatActivity.MODE_PRIVATE)
 
 
-        Log.d("GOAL", "AddGoalFragment: " +  sharedPref.contains("AddGoalFragment"))
-        Log.d("GOAL", "ItemDetailFragment: " +  sharedPref.contains("ItemDetailFragment"))
+        Log.d("GOAL", "AddGoalFragment: "
+                +  sharedPref.contains("AddGoalFragment"))
+        Log.d("GOAL", "ItemDetailFragment: "
+                +  sharedPref.contains("ItemDetailFragment"))
 
-        Log.d("GOAL", "AddGoalFragment: " +  sharedPref.getString("AddGoalFragment", null))
+        Log.d("GOAL", "AddGoalFragment: "
+                +  sharedPref.getString("AddGoalFragment", null))
 
         if( sharedPref.contains("AddGoalFragment")) {
 
@@ -245,7 +248,7 @@ class GoalListPresenterImpl : GoalListPresenterI {
         return isLongClicked
     }
 
-    fun resetOpionMenu() {
+    private fun resetOpionMenu() {
 
         isLongClick(false)
         activity?.invalidateOptionsMenu()
@@ -267,7 +270,7 @@ class GoalListPresenterImpl : GoalListPresenterI {
 
            selectedIds.add(_id.toString())
        }
-        val deletedId = activity?.contentResolver?.delete(GoalsConstant.GOAL_LIST_CONTENT_URI,
+        activity?.contentResolver?.delete(GoalsConstant.GOAL_LIST_CONTENT_URI,
                 "_ID=?", selectedIds.toTypedArray())
 
         resetOpionMenu()

@@ -9,10 +9,10 @@ import javax.inject.Singleton
 
 @Component(
        modules =
-    arrayOf(AddGoalModule::class)
+       [(AddGoalModule::class)]
 
     )
 interface AddGoalComponent {
 
-    public fun inject(presenter: AddGoalPresenterImpl)
+    fun inject(presenter: AddGoalPresenterImpl)
 }
