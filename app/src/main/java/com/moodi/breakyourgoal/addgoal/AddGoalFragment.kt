@@ -14,6 +14,8 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Spinner
+import android.widget.TextView
 import com.moodi.breakyourgoal.R
 import com.moodi.breakyourgoal.dialogfragment.DatePickerFragment
 import com.moodi.breakyourgoal.util.GoalUtils
@@ -87,7 +89,10 @@ class AddGoalFragment : Fragment(), AddGoalViewI {
 
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
 
-                val spinnerDuration = p1 as AppCompatTextView
+
+                if (p1 == null) return
+
+                val spinnerDuration = p1 as TextView
 
                 when( spinnerDuration.text) {
 

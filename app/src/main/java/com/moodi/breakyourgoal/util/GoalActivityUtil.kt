@@ -16,14 +16,21 @@ class GoalActivityUtil {
 
             val resources:Resources = context!!.resources
 
-             return true
+             if( resources.configuration.orientation ==
+                     Configuration.ORIENTATION_LANDSCAPE) {
+                 return true
+             }
 
-            if ((resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
+            if ((resources.configuration.screenLayout and
+                    Configuration.SCREENLAYOUT_SIZE_MASK
                     == Configuration.SCREENLAYOUT_SIZE_XLARGE &&
-                    resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) ||
-                    (resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
+                    resources.configuration.orientation ==
+                            Configuration.ORIENTATION_LANDSCAPE) ||
+                    (resources.configuration.screenLayout and
+                            Configuration.SCREENLAYOUT_SIZE_MASK
                             == Configuration.SCREENLAYOUT_SIZE_LARGE &&
-                            resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)) {
+                            resources.configuration.orientation ==
+                                    Configuration.ORIENTATION_LANDSCAPE)) {
 
                 return true
             }

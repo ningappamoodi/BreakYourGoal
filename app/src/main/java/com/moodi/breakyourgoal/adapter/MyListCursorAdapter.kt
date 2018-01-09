@@ -20,7 +20,6 @@ import com.moodi.breakyourgoal.goaldetail.ItemDetailActivity
 import com.moodi.breakyourgoal.goaldetail.ItemDetailFragment
 import com.moodi.breakyourgoal.goallist.ItemListActivity
 import com.moodi.breakyourgoal.util.GoalActivityUtil
-import kotlinx.android.synthetic.main.item_detail.view.*
 import kotlinx.android.synthetic.main.item_list_content.view.*
 
 
@@ -95,10 +94,11 @@ class MyListCursorAdapter : CursorRecyclerViewAdapter<MyListCursorAdapter.ViewHo
        largeScreenSetup(position, card, viewHolder)
 
 
-       setColors(myListItem, viewHolder)
+       setColorsPercentage(myListItem, viewHolder)
 
 
-        setOnClickListener(viewHolder)
+
+       setOnClickListener(viewHolder, position)
 
        setOnLongClickListener(viewHolder, position)
 
@@ -139,7 +139,7 @@ class MyListCursorAdapter : CursorRecyclerViewAdapter<MyListCursorAdapter.ViewHo
         }
     }
 
-    private fun setColors(myListItem: MyListItem, viewHolder: ViewHolder) {
+    private fun setColorsPercentage(myListItem: MyListItem, viewHolder: ViewHolder) {
         var value = statusMap?.get(myListItem.goalId + ":" + GoalsConstant.IN_PROGRESS)
         if (value == null) value = 0
 
@@ -185,18 +185,25 @@ class MyListCursorAdapter : CursorRecyclerViewAdapter<MyListCursorAdapter.ViewHo
         }
     }
 
-    private fun  setOnClickListener(viewHolder: ViewHolder) {
+    private fun  setOnClickListener(viewHolder: ViewHolder, position: Int) {
 
         viewHolder.view.setOnClickListener(object : View.OnClickListener {
 
             override fun onClick(p0: View?) {
 
+                selectedPosition = position
                 onListItemClick(p0)
 
             }
 
             private fun onListItemClick(p0: View?) {
                 if (GoalActivityUtil.isLargeScreenAndLandscape(context!!)) {
+
+                    val color = ContextCompat.getColor(context, R.color.colorPurple_50)
+                    val card =  viewHolder.view.list_item_row as CardView
+
+                    card.setCardBackgroundColor(color)
+
                     addFragment(p0)
 
                 } else {
@@ -263,15 +270,8 @@ class MyListCursorAdapter : CursorRecyclerViewAdapter<MyListCursorAdapter.ViewHo
             }
 
             private fun invalidateOptionsMenu() {
-                if (selectedPositions.size == 0) {
-                    (context as ItemListActivity).presenter!!.isLongClick(false)
-                    (context as ItemListActivity).invalidateOptionsMenu()
-                } else if (selectedPositions.size == 1) {
-
-
-                    (context as ItemListActivity).presenter!!.isLongClick(true)
-                    (context as ItemListActivity).invalidateOptionsMenu()
-                }
+                (context as ItemListActivity).presenter!!.isLongClick(true)
+                (context as ItemListActivity).invalidateOptionsMenu()
             }
         })
     }

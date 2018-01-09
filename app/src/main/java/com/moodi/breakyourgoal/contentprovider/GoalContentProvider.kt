@@ -63,8 +63,6 @@ class GoalContentProvider : ContentProvider() {
         val qb = SQLiteQueryBuilder()
 
 
-        var rowID: Long = 0
-
         when(sUriMatcher.match(uri)) {
 
             GoalsConstant.GOAL ->  qb.tables = "GoalList"
@@ -86,7 +84,7 @@ class GoalContentProvider : ContentProvider() {
 
         db = dbHelper.getWritableDatabase() as SQLiteDatabase
 
-        return if (db == null) false else true
+        return db != null
     }
 
     override fun update(uri: Uri?, cv: ContentValues?, selection: String?, selectionArgs: Array<out String>?): Int {
@@ -104,13 +102,13 @@ class GoalContentProvider : ContentProvider() {
     }
 
     override fun delete(uri: Uri?, selection: String?, selectionArgs: Array<out String>?): Int {
-        var count = 0 as Int
+        var count = 0
         when (sUriMatcher.match(uri)){
             GoalsConstant.GOAL -> count = db!!.delete("GoalList", selection, selectionArgs)
             GoalsConstant.SUBGOAL -> count = db!!.delete("SubGoal", selection, selectionArgs)
         }
 
-        getContext().getContentResolver().notifyChange(uri, null);
+        getContext().getContentResolver().notifyChange(uri, null)
         return count;
     }
 

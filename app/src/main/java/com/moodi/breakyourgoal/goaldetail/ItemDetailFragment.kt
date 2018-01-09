@@ -60,7 +60,7 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
     lateinit var recyclerAdapter : SubGoalCursorAdapter
 
-    val subGoalDialogFragment  = SubGoalDialogFragment()
+    private val subGoalDialogFragment  = SubGoalDialogFragment()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -125,11 +125,8 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
     }
 
     private fun addSubGoal() {
-        item_detail_add_sub_goal.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(p0: View?) {
-                subGoalDialogFragment.show(fragmentManager, "subGoalDialogFragment")
-            }
-        })
+        item_detail_add_sub_goal.setOnClickListener { subGoalDialogFragment.show(fragmentManager,
+                "subGoalDialogFragment") }
     }
 
     private fun initLoader() {
@@ -151,14 +148,14 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
     }
 
     private fun getGoalId() {
-        goalId = if (GoalActivityUtil.isLargeScreenAndLandscape(activity)) {
+      if (GoalActivityUtil.isLargeScreenAndLandscape(activity)) {
 
             val fragmentItemDetail = fragmentManager.findFragmentById(R.id.item_detail_container)
                     as ItemDetailFragment
-            fragmentItemDetail.goalId
+            goalId = fragmentItemDetail.arguments.getString("GoalId")
         } else {
 
-            activity.intent.getStringExtra("GoalId")
+          goalId = activity.intent.getStringExtra("GoalId")
         }
 
         Log.d("GOAL", "ItemDetailFragment getGoalId: goalId: "

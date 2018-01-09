@@ -21,7 +21,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/item_list"
         android:name="com.moodi.breakyourgoal.ItemListFragment"
-        android:layout_width="@dimen/item_width_500dp"
+        android:layout_width="@dimen/item_width_350dp"
         android:layout_height="match_parent"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"

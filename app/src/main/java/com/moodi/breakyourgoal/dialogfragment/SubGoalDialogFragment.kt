@@ -79,7 +79,7 @@ class SubGoalDialogFragment : DialogFragment(), DatePickerI {
 
 
                 if(fragment is ItemDetailFragment) {
-                    subgoalAdd(p0!!)
+                    subgoalAdd()
 
                 }
                 else if(fragment is AddGoalFragment) {
@@ -128,7 +128,7 @@ class SubGoalDialogFragment : DialogFragment(), DatePickerI {
         subgoalDate?.setText(i2.toString() + "/" + i1.toString() + "/" + i.toString())
     }
 
-    fun subgoalAdd(view: View) {
+    fun subgoalAdd() {
 
 
         Log.d("GOAL", "Inside subgoalAdd!! ")
@@ -138,36 +138,40 @@ class SubGoalDialogFragment : DialogFragment(), DatePickerI {
                 + subgoalName?.text.toString().length)
 
 
+        if(!validate()) return
+
         val fragmentItemDetail = fragmentManager.findFragmentById(R.id.item_detail_container)
                 as ItemDetailFragment
 
+        insertSubGoal(fragmentItemDetail)
+        restartLoader(fragmentItemDetail)
+
+        dismiss()
+
+    }
+
+    private fun restartLoader(fragmentItemDetail: ItemDetailFragment) {
+        fragmentItemDetail.loaderManager.restartLoader(GoalsConstant.SUBGOAL, null, fragmentItemDetail)
+
+        Log.d("GOAL", "In item detail fragment is item list acivity? : "
+                + (activity is ItemListActivity))
+
+        if (activity is ItemListActivity) {
+            activity.loaderManager.restartLoader(GoalsConstant.SUBGOAL, null,
+                    (activity as ItemListActivity).presenter!!.getLoader())
+           /* activity.loaderManager.restartLoader(GoalsConstant.GOAL, null,
+                    (activity as ItemListActivity).presenter!!.getLoader())*/
+        }
+    }
+
+    private fun insertSubGoal(fragmentItemDetail: ItemDetailFragment) {
         val values = ContentValues()
         values.put("SubGoalName", subgoalName?.text.toString())
         values.put("Status", "Open")
         values.put("GoalId", fragmentItemDetail.goalId)
         values.put("TargetDate", subgoalDate?.text.toString())
 
-        activity.contentResolver.insert(GoalsConstant.SUB_GOAL_CONTENT_URI,values)
-
-        if(!validate()) {
-
-            return
-        }
-
-        fragmentItemDetail.loaderManager.restartLoader(GoalsConstant.SUBGOAL, null, fragmentItemDetail)
-
-        Log.d("GOAL", "In item detail fragment is item list acivity? : "
-                + (activity is ItemListActivity))
-
-        if(activity is ItemListActivity) {
-            activity.loaderManager.restartLoader(GoalsConstant.SUBGOAL, null,
-                    (activity as ItemListActivity).presenter!!.getLoader())
-            activity.loaderManager.restartLoader(GoalsConstant.GOAL, null,
-                    (activity as ItemListActivity).presenter!!.getLoader())
-        }
-
-        dismiss()
-
+        activity.contentResolver.insert(GoalsConstant.SUB_GOAL_CONTENT_URI, values)
     }
 
 }

@@ -7,17 +7,14 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
 import android.util.Log
-import android.view.View
 import com.moodi.breakyourgoal.*
 import com.moodi.breakyourgoal.adapter.MyListCursorAdapter
 import com.moodi.breakyourgoal.addgoal.AddGoalActivity
 import com.moodi.breakyourgoal.addgoal.AddGoalFragment
 import com.moodi.breakyourgoal.common.GoalsConstant
-import com.moodi.breakyourgoal.goaldetail.ItemDetailActivity
 import com.moodi.breakyourgoal.goaldetail.ItemDetailFragment
 import com.moodi.breakyourgoal.util.GoalActivityUtil
 import com.moodi.breakyourgoal.util.VerticalDividerItemDecoration
-import kotlinx.android.synthetic.main.item_list_content.view.*
 
 /**
  * Created by ningappamoodi on 14/9/17.
@@ -253,7 +250,7 @@ class GoalListPresenterImpl : GoalListPresenterI {
         return isLongClicked
     }
 
-    private fun resetOpionMenu() {
+    private fun resetOptionMenu() {
 
         isLongClick(false)
         activity?.invalidateOptionsMenu()
@@ -264,21 +261,28 @@ class GoalListPresenterImpl : GoalListPresenterI {
     override fun deleteGoals() {
 
         val cursor = getRecyclerAdapter().cursor!!
-        val selectedIds: ArrayList<String>  = ArrayList<String>()
+
        for(item in  getRecyclerAdapter()
                .selectedPositions) {
 
 
+           if(cursor.isAfterLast) break
+
            cursor.moveToPosition(item)
 
-           val _id = cursor.getInt(cursor.getColumnIndex("_id"))
+           val id = cursor.getInt(cursor.getColumnIndex("_id"))
 
-           selectedIds.add(_id.toString())
+           activity?.contentResolver?.delete(GoalsConstant.GOAL_LIST_CONTENT_URI,
+                   "_ID = ?", arrayOf(id.toString()))
+
+           activity?.contentResolver?.delete(GoalsConstant.SUB_GOAL_CONTENT_URI,
+                   "GoalId = ?", arrayOf(id.toString()))
+
        }
-        activity?.contentResolver?.delete(GoalsConstant.GOAL_LIST_CONTENT_URI,
-                "_ID=?", selectedIds.toTypedArray())
 
-        resetOpionMenu()
+
+
+        resetOptionMenu()
         restartLoader()
     }
 
