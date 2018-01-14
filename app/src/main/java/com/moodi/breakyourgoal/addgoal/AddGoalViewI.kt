@@ -10,7 +10,7 @@ interface AddGoalViewI {
     fun subgoalBtnClickListener()
     fun fromDateClickListener()
     fun toDateClickListener()
-    fun saveSubGoalBtnClickListener()
+    fun saveGoalBtnClickListener()
     fun setCategoryAdapter(arrayAdapter: ArrayAdapter<CharSequence>)
     fun setDurationAdapter(arrayAdapter: ArrayAdapter<CharSequence>)
     fun durationBtnClickListener()

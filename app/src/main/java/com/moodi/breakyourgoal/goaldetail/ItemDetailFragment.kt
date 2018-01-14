@@ -134,6 +134,11 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
         loaderManager.initLoader(GoalsConstant.SUBGOAL, null, this)
     }
 
+    fun restartLoader() {
+        loaderManager.restartLoader(GoalsConstant.GOAL, null, this)
+        loaderManager.restartLoader(GoalsConstant.SUBGOAL, null, this)
+    }
+
     private fun saveGoalId() {
         if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
 
@@ -195,6 +200,9 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
         when(loader?.id) {
             GoalsConstant.GOAL -> {
 
+
+
+
                 data?.moveToFirst()
 
                 val df: DateFormat = SimpleDateFormat("dd/MM/yyyy")
@@ -211,7 +219,9 @@ class ItemDetailFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
                 itemDetailDuration?.text = data?.getString(3)
 
                 item_detail_include.visibility = View.VISIBLE
-                item_detail_progressBar.visibility = View.INVISIBLE
+                //item_detail_progressBar.visibility = View.INVISIBLE
+
+
             }
 
             GoalsConstant.SUBGOAL -> {

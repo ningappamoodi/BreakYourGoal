@@ -61,7 +61,4 @@ class AddGoalActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
 }

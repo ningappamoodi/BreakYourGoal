@@ -1,6 +1,7 @@
 package com.moodi.breakyourgoal.addgoal
 
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.database.MatrixCursor
@@ -43,6 +44,8 @@ class AddGoalPresenterImpl: AddGoalPresenterI {
     @Inject
     lateinit var addGoal: AddGoalImpl
 
+
+    val context: Context
     constructor(addGoalViewI: AddGoalViewI) {
 
         this.addGoalViewI = addGoalViewI
@@ -52,6 +55,8 @@ class AddGoalPresenterImpl: AddGoalPresenterI {
                 .component.inject(this)
 
         Log.i("GOAL", "######## addGoal: " + addGoal)
+
+        context = (addGoalViewI as AddGoalFragment).context
     }
     override fun saveGoal(view: View) {
 
@@ -163,6 +168,8 @@ class AddGoalPresenterImpl: AddGoalPresenterI {
         val uri: Uri = fragment!!.activity.contentResolver.insert(GoalsConstant.GOAL_LIST_CONTENT_URI, values)
 
         Log.d("GOAL", "uri.lastPathSegment : " + uri.lastPathSegment)
+
+
         return uri
     }
 

@@ -5,6 +5,6 @@
     <dimen name="item_width">450dp</dimen>
     <dimen name="item_width_350dp">350dp</dimen>
     <dimen name="item_width_250dp">250dp</dimen>
-    <dimen name="item_width_xlarge">600dp</dimen>
+    <dimen name="item_width_xlarge">400dp</dimen>
     <dimen name="goal_item_percentage_text">40dp</dimen>
 </resources>

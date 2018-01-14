@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
-import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -37,9 +36,9 @@ class MyListCursorAdapter : CursorRecyclerViewAdapter<MyListCursorAdapter.ViewHo
 
 
     var selectedPosition: Int? = null
-    var newDataPosition: Int? = null
+    var newDataPosition: Int? = -1
 
-    val selectedPositions: ArrayList<Int> = ArrayList<Int>()
+    val selectedPositions: ArrayList<Int> = ArrayList()
 
     constructor(context: Context, cursor: Cursor) : super(context, cursor)  {
 
@@ -49,24 +48,17 @@ class MyListCursorAdapter : CursorRecyclerViewAdapter<MyListCursorAdapter.ViewHo
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-       /* override fun onClick(p0: View?) {
-
-
-        }*/
 
         val view: View = view
 
-       /* override fun onLongClick(p0: View?): Boolean {
 
-            return true
-        }*/
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent!!.getContext())
                 .inflate(R.layout.item_list_content, parent, false)
-        val vh = ViewHolder(itemView)
-        return vh
+
+        return ViewHolder(itemView)
     }
 
 
@@ -96,8 +88,6 @@ class MyListCursorAdapter : CursorRecyclerViewAdapter<MyListCursorAdapter.ViewHo
 
        setColorsPercentage(myListItem, viewHolder)
 
-
-
        setOnClickListener(viewHolder, position)
 
        setOnLongClickListener(viewHolder, position)
@@ -121,22 +111,10 @@ class MyListCursorAdapter : CursorRecyclerViewAdapter<MyListCursorAdapter.ViewHo
     }
 
     private fun setBackGroundColor(position: Int, card: CardView, viewHolder: ViewHolder) {
-        if (position == selectedPosition) {
 
-            card.setCardBackgroundColor(ContextCompat.getColor(context!!, R.color.colorPurple_50))
+        card.isSelected = false
+        card.setCardBackgroundColor(Color.WHITE)
 
-        } else if (!TextUtils.isEmpty(viewHolder.view.list_item_goalId.text.toString()) &&
-                viewHolder.view.list_item_goalId.text.toString().toInt() == newDataPosition) {
-
-            card.isSelected = true
-            card.setCardBackgroundColor(ContextCompat.getColor(context!!, R.color.colorPurple_50))
-            newDataPosition = null
-        } else {
-
-            card.isSelected = false
-            card.setCardBackgroundColor(Color.WHITE)
-
-        }
     }
 
     private fun setColorsPercentage(myListItem: MyListItem, viewHolder: ViewHolder) {
@@ -160,7 +138,7 @@ class MyListCursorAdapter : CursorRecyclerViewAdapter<MyListCursorAdapter.ViewHo
 
         val totalCount: Int = value + value1 + value2
 
-        var valueFloat: Float = 0f
+        var valueFloat = 0f
         if (totalCount == 0) {
             value = 0
         } else {
@@ -191,18 +169,29 @@ class MyListCursorAdapter : CursorRecyclerViewAdapter<MyListCursorAdapter.ViewHo
 
             override fun onClick(p0: View?) {
 
-                selectedPosition = position
+                handleSelectedPosition2()
+                invalidateOnClick()
+                handleSelectedPosition()
                 onListItemClick(p0)
 
+            }
+
+            private fun handleSelectedPosition2() {
+                if (selectedPositions.contains(position)) {
+
+                    selectedPositions.remove(position)
+                }
+            }
+
+            private fun handleSelectedPosition() {
+                selectedPosition?.let { notifyItemChanged(it) }
+                selectedPosition = position
             }
 
             private fun onListItemClick(p0: View?) {
                 if (GoalActivityUtil.isLargeScreenAndLandscape(context!!)) {
 
-                    val color = ContextCompat.getColor(context, R.color.colorPurple_50)
-                    val card =  viewHolder.view.list_item_row as CardView
-
-                    card.setCardBackgroundColor(color)
+                    setColor(viewHolder)
 
                     addFragment(p0)
 
@@ -212,6 +201,27 @@ class MyListCursorAdapter : CursorRecyclerViewAdapter<MyListCursorAdapter.ViewHo
                 }
             }
         })
+    }
+
+    private fun setColor(viewHolder: ViewHolder) {
+        val color = ContextCompat.getColor(context, R.color.colorPurple_50)
+        val card = viewHolder.view.list_item_row as CardView
+
+
+
+        card.setCardBackgroundColor(color)
+    }
+
+    private fun invalidateOnClick() {
+
+        (context as ItemListActivity).presenter!!.isLongClick(false)
+        (context as ItemListActivity).invalidateOptionsMenu()
+
+        for (item in selectedPositions) {
+            notifyItemChanged(item)
+        }
+
+        selectedPositions.clear()
     }
 
     private fun callActivity(p0: View?) {
@@ -227,11 +237,17 @@ class MyListCursorAdapter : CursorRecyclerViewAdapter<MyListCursorAdapter.ViewHo
         // using a fragment transaction.
         val arguments = Bundle()
 
-        val goalId = p0!!.list_item_goalId.text.toString()
+        val goalId: String = p0!!.list_item_goalId.text.toString()
         arguments.putString("GoalId", goalId)
         val goalName = p0!!.list_item_goal_name.text.toString()
         arguments.putString("goalName", goalName)
 
+
+        replaceFragment(arguments)
+
+    }
+
+    private fun replaceFragment(arguments: Bundle) {
         val fragment = ItemDetailFragment()
         fragment.arguments = arguments
         (context as ItemListActivity)!!.supportFragmentManager.beginTransaction()
@@ -244,33 +260,50 @@ class MyListCursorAdapter : CursorRecyclerViewAdapter<MyListCursorAdapter.ViewHo
         viewHolder.view.setOnLongClickListener(object : View.OnLongClickListener {
             override fun onLongClick(var1: View): Boolean {
 
-              val color = ContextCompat.getColor(context, R.color.colorPurple_50)
+              val color = ContextCompat.getColor(context, R.color.material_grey_300)
                 val colorWhite = ContextCompat.getColor(context, android.R.color.white)
 
-                /*  viewHolder.view.setBackgroundColor(color)*/
+                handleSelectedPosition()
+
 
                 val card =  viewHolder.view.list_item_row as CardView
 
 
                 setColor(card, colorWhite, color)
 
-                invalidateOptionsMenu()
+
 
                 return true
+            }
+
+            private fun handleSelectedPosition() {
+                if (selectedPosition != position) {
+
+                    selectedPosition?.let { notifyItemChanged(it) }
+                    selectedPosition = -1
+                }
             }
 
             private fun setColor(card: CardView, colorWhite: Int, color: Int) {
                 if (selectedPositions.contains(position)) {
                     card.setCardBackgroundColor(colorWhite)
                     selectedPositions.remove(position)
+
+                    if(selectedPositions.isEmpty())  hideDeleteMenu()
                 } else {
                     card.setCardBackgroundColor(color)
                     selectedPositions.add(position)
+                    invalidateOptionsMenu()
                 }
             }
 
             private fun invalidateOptionsMenu() {
                 (context as ItemListActivity).presenter!!.isLongClick(true)
+                (context as ItemListActivity).invalidateOptionsMenu()
+            }
+
+            private fun hideDeleteMenu() {
+                (context as ItemListActivity).presenter!!.isLongClick(false)
                 (context as ItemListActivity).invalidateOptionsMenu()
             }
         })

@@ -3,6 +3,7 @@ package com.moodi.breakyourgoal.goallist
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.database.Cursor
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
@@ -13,6 +14,7 @@ import com.moodi.breakyourgoal.addgoal.AddGoalActivity
 import com.moodi.breakyourgoal.addgoal.AddGoalFragment
 import com.moodi.breakyourgoal.common.GoalsConstant
 import com.moodi.breakyourgoal.goaldetail.ItemDetailFragment
+import com.moodi.breakyourgoal.goaldetail.NoGoalDetailFragment
 import com.moodi.breakyourgoal.util.GoalActivityUtil
 import com.moodi.breakyourgoal.util.VerticalDividerItemDecoration
 
@@ -143,7 +145,7 @@ class GoalListPresenterImpl : GoalListPresenterI {
         val sharedPref =   activity!!.getSharedPreferences("GOALS", AppCompatActivity.MODE_PRIVATE)
 
         if(  activity!!.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            recyclerAdapter?.newDataPosition = sharedPref.getString("GoalId", null)?.toInt()
+            recyclerAdapter?.newDataPosition = sharedPref.getString("GoalId", "0")?.toInt()
         }
 
         val editor = sharedPref.edit()
@@ -151,49 +153,6 @@ class GoalListPresenterImpl : GoalListPresenterI {
         editor.commit()
 
         recyclerView.adapter = recyclerAdapter
-
-        /*recyclerView.addOnItemTouchListener(RecyclerItemClickListner(activity!!, object :RecyclerItemClickListner.OnItemClickListener {
-            override fun onItemClick(view: View, position: Int) {
-                Log.d("GOAL", "Inside addOnItemTouchListener")
-
-                // view.setBackgroundColor(ContextCompat.getColor(baseContext, R.color.colorGrey))
-                view.isSelected = true
-                recyclerAdapter!!.selectedPosition = position
-
-                recyclerView.adapter.notifyDataSetChanged()
-
-
-                Log.d("GOAL", "$$$$$$$$$$$$$ GoalId: " + view.list_item_goalId.text.toString())
-
-                if (GoalActivityUtil.isLargeScreenAndLandscape(  activity!!.resources)) {
-                    // Create the detail fragment and add it to the activity
-                    // using a fragment transaction.
-                    val arguments = Bundle()
-
-                    arguments.putString("GoalId", view.list_item_goalId.text.toString())
-                    arguments.putString("goalName",  view.list_item_goal_name.text.toString())
-
-                    val fragment = ItemDetailFragment()
-                    fragment.arguments = arguments
-                    activity!!.supportFragmentManager.beginTransaction()
-                            .replace(R.id.item_detail_container, fragment)
-                            .commit()
-
-                } else {
-                    val intent = Intent(  activity?.baseContext, ItemDetailActivity::class.java)
-                    intent.putExtra("GoalId", view.list_item_goalId.text.toString())
-                    intent.putExtra("goalName",  view.list_item_goal_name.text.toString())
-                    activity?.startActivity(intent)
-                }
-            }
-
-          override  fun onItemLongClick(view: View, position: Int) {
-
-              Log.d("GOAL", "$$$$$$$$$ onItemLongClick!! ")
-
-            }
-
-        }))*/
 
     }
 
@@ -266,6 +225,7 @@ class GoalListPresenterImpl : GoalListPresenterI {
                .selectedPositions) {
 
 
+           if (cursor.count == 0) break
            if(cursor.isAfterLast) break
 
            cursor.moveToPosition(item)
@@ -280,10 +240,25 @@ class GoalListPresenterImpl : GoalListPresenterI {
 
        }
 
+        replaceWithNoGoalFragment(cursor)
 
 
         resetOptionMenu()
         restartLoader()
+    }
+
+    private fun replaceWithNoGoalFragment(cursor: Cursor) {
+        if (GoalActivityUtil.isLargeScreenAndLandscape(context)
+               /* && cursor.count
+                == getRecyclerAdapter().selectedPositions.size*/
+                ) {
+
+            val fragment2 = NoGoalDetailFragment()
+
+            activity!!.supportFragmentManager.beginTransaction()
+                    .replace(R.id.item_detail_container, fragment2)
+                    .commit()
+        }
     }
 
 }
