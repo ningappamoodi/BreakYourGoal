@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/list_item_row"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="8dp"
     android:layout_marginRight="8dp"
     android:layout_marginTop="8dp"
-    app:cardElevation="4dp"
-    app:cardCornerRadius="8dp"
-    android:id="@+id/list_item_row"
     android:background="?attr/selectableItemBackground"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp"
 
-    >
+    app:contentPadding="4dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView android:id="@+id/list_item_goalId"
+        <TextView
+            android:id="@+id/list_item_goalId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="invisible"/>
+            android:visibility="invisible" />
 
         <TextView
             android:id="@+id/list_item_goal_name"
@@ -49,60 +50,65 @@
             android:textColor="@color/colorGrey" />
 
 
-
-        <ImageView android:id="@+id/list_item_goal_status_inprogress_img"
+        <ImageView
+            android:id="@+id/list_item_goal_status_inprogress_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_brightness_1_black_24dp"
-            android:layout_marginLeft="@dimen/text_margin"
-            android:layout_marginRight="2dp"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/list_item_date"
-            android:tint="@color/colorOrange"/>
+            android:layout_marginLeft="@dimen/text_margin"
+            android:layout_marginRight="2dp"
+            android:tint="@color/colorOrange"
+            app:srcCompat="@drawable/ic_brightness_1_black_24dp" />
 
-        <TextView android:id="@+id/list_item_goal_status_inprogress_txt"
+        <TextView
+            android:id="@+id/list_item_goal_status_inprogress_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="20"
-            android:layout_marginTop="3dp"
-            android:layout_marginRight="8dp"
             android:layout_below="@+id/list_item_date"
-            android:layout_toRightOf="@+id/list_item_goal_status_inprogress_img"/>
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="3dp"
+            android:layout_toRightOf="@+id/list_item_goal_status_inprogress_img"
+            android:text="20" />
 
-        <ImageView android:id="@+id/list_item_goal_status_completed_img"
+        <ImageView
+            android:id="@+id/list_item_goal_status_completed_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_brightness_1_black_24dp"
             android:layout_below="@+id/list_item_date"
             android:layout_marginRight="2dp"
             android:layout_toRightOf="@+id/list_item_goal_status_inprogress_txt"
-            android:tint="@color/colorGreen"/>
+            android:tint="@color/colorGreen"
+            app:srcCompat="@drawable/ic_brightness_1_black_24dp" />
 
-        <TextView android:id="@+id/list_item_goal_status_completed_txt"
+        <TextView
+            android:id="@+id/list_item_goal_status_completed_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="7"
-            android:layout_marginTop="3dp"
-            android:layout_marginRight="8dp"
             android:layout_below="@+id/list_item_date"
-            android:layout_toRightOf="@+id/list_item_goal_status_completed_img"/>
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="3dp"
+            android:layout_toRightOf="@+id/list_item_goal_status_completed_img"
+            android:text="7" />
 
-        <ImageView android:id="@+id/list_item_goal_status_open_img"
+        <ImageView
+            android:id="@+id/list_item_goal_status_open_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_brightness_1_black_24dp"
+            android:layout_below="@+id/list_item_date"
             android:layout_marginRight="2dp"
-            android:layout_below="@+id/list_item_date"
-            android:layout_toRightOf="@+id/list_item_goal_status_completed_txt"/>
+            android:layout_toRightOf="@+id/list_item_goal_status_completed_txt"
+            app:srcCompat="@drawable/ic_brightness_1_black_24dp" />
 
-        <TextView android:id="@+id/list_item_goal_status_open_txt"
+        <TextView
+            android:id="@+id/list_item_goal_status_open_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="10"
-            android:layout_marginTop="3dp"
-            android:layout_marginRight="8dp"
             android:layout_below="@+id/list_item_date"
-            android:layout_toRightOf="@+id/list_item_goal_status_open_img"/>
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="3dp"
+            android:layout_toRightOf="@+id/list_item_goal_status_open_img"
+            android:text="10" />
 
 
         <TextView
@@ -118,18 +124,19 @@
             android:textAppearance="?attr/textAppearanceListItemSecondary"
             android:textColor="@color/colorGrey" />
 
-        <TextView android:id="@+id/list_item_goal_duration"
+        <TextView
+            android:id="@+id/list_item_goal_duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="6dp"
-            android:textAppearance="?attr/textAppearanceListItemSecondary"
-            android:layout_toRightOf="@+id/list_item_goal_category"
-            android:layout_marginRight="@dimen/text_margin"
             android:layout_below="@+id/list_item_date"
-            android:textColor="@color/colorGrey"
+            android:layout_marginBottom="6dp"
+            android:layout_marginRight="@dimen/text_margin"
+            android:layout_marginTop="4dp"
+            android:layout_toRightOf="@+id/list_item_goal_category"
             android:text="Days"
-            android:visibility="invisible"/>
+            android:textAppearance="?attr/textAppearanceListItemSecondary"
+            android:textColor="@color/colorGrey"
+            android:visibility="invisible" />
 
         <TextView
             android:id="@+id/list_item_goal_percentage"

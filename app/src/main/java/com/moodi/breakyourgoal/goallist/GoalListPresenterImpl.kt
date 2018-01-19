@@ -2,6 +2,7 @@ package com.moodi.breakyourgoal.goallist
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.database.Cursor
 import android.os.Bundle
@@ -58,44 +59,52 @@ class GoalListPresenterImpl : GoalListPresenterI {
 
         if( sharedPref.contains("AddGoalFragment")) {
 
-            val arguments = Bundle()
-
-            Log.d("GOAL", " In Home Activity fragment: ")
-            // arguments.putString("GoalId", goalId.text.toString())
-            //arguments.putString("goalName", goalName.text.toString())
-
-            val fragment = AddGoalFragment()
-            fragment.arguments = arguments
-            activity!!.supportFragmentManager.beginTransaction()
-                    .replace(R.id.item_detail_container, fragment)
-                    .commit()
-
-            val editor = sharedPref.edit()
-            editor.remove("AddGoalFragment")
-            editor.commit()
+            replaceAddGoalFragment(sharedPref)
         }
         else  if( sharedPref.contains("ItemDetailFragment")) {
 
-            val arguments = Bundle()
-
-            Log.d("GOAL", " In List Activity fragment ItemDetailFragment : ")
-            // arguments.putString("GoalId", goalId.text.toString())
-            //arguments.putString("goalName", goalName.text.toString())
-
-            arguments.putString("GoalId", sharedPref.getString("GoalId", null))
-            val fragment = ItemDetailFragment()
-            fragment.arguments = arguments
-            activity!!.supportFragmentManager.beginTransaction()
-                    .replace(R.id.item_detail_container, fragment)
-                    .commit()
-
-            val editor = sharedPref.edit()
-            editor.remove("ItemDetailFragment")
-            // editor.remove("GoalId")
-            editor.commit()
+            replaceItemDetailFragment(sharedPref)
 
         }
 
+    }
+
+    private fun replaceItemDetailFragment(sharedPref: SharedPreferences) {
+        val arguments = Bundle()
+
+        Log.d("GOAL", " In List Activity fragment ItemDetailFragment : ")
+        // arguments.putString("GoalId", goalId.text.toString())
+        //arguments.putString("goalName", goalName.text.toString())
+
+        arguments.putString("GoalId", sharedPref.getString("GoalId", null))
+        val fragment = ItemDetailFragment()
+        fragment.arguments = arguments
+        activity!!.supportFragmentManager.beginTransaction()
+                .replace(R.id.item_detail_container, fragment)
+                .commit()
+
+        val editor = sharedPref.edit()
+        editor.remove("ItemDetailFragment")
+        // editor.remove("GoalId")
+        editor.commit()
+    }
+
+    private fun replaceAddGoalFragment(sharedPref: SharedPreferences) {
+        val arguments = Bundle()
+
+        Log.d("GOAL", " In Home Activity fragment: ")
+        // arguments.putString("GoalId", goalId.text.toString())
+        //arguments.putString("goalName", goalName.text.toString())
+
+        val fragment = AddGoalFragment()
+        fragment.arguments = arguments
+        activity!!.supportFragmentManager.beginTransaction()
+                .replace(R.id.item_detail_container, fragment)
+                .commit()
+
+        val editor = sharedPref.edit()
+        editor.remove("AddGoalFragment")
+        editor.commit()
     }
 
     override fun addGoal() {
@@ -138,7 +147,7 @@ class GoalListPresenterImpl : GoalListPresenterI {
         val c =   activity!!.contentResolver.query(GoalsConstant.GOAL_LIST_CONTENT_URI, projection, selection,
                 selectionArgs, sortOrder)
 
-        recyclerView.addItemDecoration(VerticalDividerItemDecoration(20, true))
+       // recyclerView.addItemDecoration(VerticalDividerItemDecoration(20, true))
 
         recyclerAdapter = MyListCursorAdapter(activity!!, c)
 
@@ -221,6 +230,15 @@ class GoalListPresenterImpl : GoalListPresenterI {
 
         val cursor = getRecyclerAdapter().cursor!!
 
+
+        val count = cursor.count
+        val columnIndex = cursor.getColumnIndex("_id")
+
+        Log.i("DBIN", "## count :" + count)
+        Log.i("DBIN", "## columnIndex :" + columnIndex)
+
+       //val  selectedPositions2: ArrayList<Int> = ArrayList()
+
        for(item in  getRecyclerAdapter()
                .selectedPositions) {
 
@@ -228,9 +246,13 @@ class GoalListPresenterImpl : GoalListPresenterI {
            if (cursor.count == 0) break
            if(cursor.isAfterLast) break
 
+           Log.i("DBIN", "## item :" + item)
+
            cursor.moveToPosition(item)
 
-           val id = cursor.getInt(cursor.getColumnIndex("_id"))
+
+
+           val id = cursor.getInt(columnIndex)
 
            activity?.contentResolver?.delete(GoalsConstant.GOAL_LIST_CONTENT_URI,
                    "_ID = ?", arrayOf(id.toString()))
@@ -239,6 +261,7 @@ class GoalListPresenterImpl : GoalListPresenterI {
                    "GoalId = ?", arrayOf(id.toString()))
 
        }
+        getRecyclerAdapter().selectedPositions.clear()
 
         replaceWithNoGoalFragment(cursor)
 
